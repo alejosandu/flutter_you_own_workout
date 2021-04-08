@@ -13,6 +13,11 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: appTheme,
       routes: appRoutes,
+      onGenerateRoute: (settings) {
+        debugPrint(settings.arguments);
+        // return MaterialPageRoute(builder: appRoutes[settings.name]);
+        return null;
+      },
       initialRoute: "/",
     );
   }

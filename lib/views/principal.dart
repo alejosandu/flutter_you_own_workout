@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:yourownworkout/widgets/appbar.dart';
+import '../widgets/appbar.dart';
+import '../models/models.dart';
+import '../views/exerciseView.dart';
 
-class PrincipalPage extends StatelessWidget {
+class PrincipalPage extends StatelessWidget implements RouteName {
+  static String routeName = '/';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,8 +14,13 @@ class PrincipalPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async {
-          final result =
-              await Navigator.of(context).pushNamed("/createWorkout");
+          try {
+            final result = await Navigator.of(context)
+                .pushNamed(ExerciseView.routeName) as Exercise;
+            debugPrint("result: ${result.toString()}");
+          } catch (e) {
+            debugPrint(e.toString());
+          }
         },
       ),
     );

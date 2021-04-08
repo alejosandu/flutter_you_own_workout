@@ -1,12 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:yourownworkout/widgets/custom_snackbar.dart';
 import '../widgets/widgets.dart';
 import '../models/models.dart';
 import '../errors/errors.dart';
 
 class ExerciseView extends StatefulWidget {
+  static String routeName = "/createExercise";
+
   @override
   _ExerciseViewState createState() => _ExerciseViewState();
 }
@@ -15,6 +18,8 @@ class _ExerciseViewState extends State<ExerciseView> {
   String stage = "";
   int counter = 0;
   Timer timer;
+
+  final _exerciseName = TextEditingController();
 
   final _count = TextEditingController();
 
@@ -81,17 +86,33 @@ class _ExerciseViewState extends State<ExerciseView> {
     //
   }
 
+  Exercise createExercise() {
+    return Exercise(
+      exerciseName: _exerciseName.text,
+      count: int.parse(_count.text),
+      intervalCount: double.parse(_intervalCount.text),
+      breakDuration: double.parse(_break.text),
+      series: int.parse(_series.text),
+    );
+  }
+
   void save() {
     try {
       // TODO: create validation of fields
       validateAll();
+      final Exercise exercise = createExercise();
+      Navigator.of(context).pop(exercise);
     } on AppError catch (e) {
       CustomSnackBar(context, text: e.message);
+    } on AssertionError catch (e) {
+      if (e.message is AppError) {
+        final AppError error = e.message;
+        CustomSnackBar(context, text: error.message);
+      }
+      debugPrint(e.message);
     } catch (e) {
-      debugPrint(e);
+      debugPrint(e.toString());
     }
-    // Navigator.of(context).pop();
-    //
   }
 
   void stop() {
@@ -105,38 +126,63 @@ class _ExerciseViewState extends State<ExerciseView> {
         title: "Crear ejercicio",
       ),
       body: SingleChildScrollView(
-        // scrollDirection: Axis.horizontal,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: 120,
-            minWidth: 360,
-            maxWidth: 400,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: 10,
+            horizontal: 10,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _ConfigSection(
-                    icon: Icons.arrow_circle_up,
-                    controller: _count,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: 120,
+              minWidth: 360,
+              maxWidth: 400,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(bottom: 8),
+                  child: TextField(
+                    autofocus: false,
+                    controller: _exerciseName,
+                    textAlign: TextAlign.center,
+                    textAlignVertical: TextAlignVertical.center,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      labelText: "Nombre del ejercicio",
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                    ),
                   ),
-                  _ConfigSection(
-                    icon: Icons.more_time,
-                    controller: _intervalCount,
-                  ),
-                  _ConfigSection(
-                    icon: Icons.access_time_rounded,
-                    controller: _break,
-                  ),
-                  _ConfigSection(
-                    icon: Icons.autorenew,
-                    controller: _series,
-                  ),
-                ],
-              ),
-            ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _ConfigSection(
+                      icon: Icons.arrow_circle_up,
+                      controller: _count,
+                    ),
+                    _ConfigSection(
+                      icon: Icons.more_time,
+                      controller: _intervalCount,
+                    ),
+                    _ConfigSection(
+                      icon: Icons.access_time_rounded,
+                      controller: _break,
+                    ),
+                    _ConfigSection(
+                      icon: Icons.autorenew,
+                      controller: _series,
+                    ),
+                  ],
+                ),
+                ElevatedButton(
+                  child: Icon(Icons.add),
+                  onPressed: () {},
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -149,7 +195,6 @@ class _ExerciseViewState extends State<ExerciseView> {
 }
 
 class _ConfigSection extends StatelessWidget {
-//   final String label;
   final IconData icon;
   final TextEditingController controller;
 
