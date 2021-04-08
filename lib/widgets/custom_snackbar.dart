@@ -6,7 +6,10 @@ class CustomSnackBar {
     @required String text,
     String title,
   }) {
-    final snackBar = SnackBar(content: Text(text));
+    final snackBar = SnackBar(
+      content: Text(text),
+      duration: Duration(seconds: 10),
+    );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

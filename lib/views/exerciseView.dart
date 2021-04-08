@@ -6,12 +6,12 @@ import '../widgets/widgets.dart';
 import '../models/models.dart';
 import '../errors/errors.dart';
 
-class ExercisePage extends StatefulWidget {
+class ExerciseView extends StatefulWidget {
   @override
-  _ExercisePageState createState() => _ExercisePageState();
+  _ExerciseViewState createState() => _ExerciseViewState();
 }
 
-class _ExercisePageState extends State<ExercisePage> {
+class _ExerciseViewState extends State<ExerciseView> {
   String stage = "";
   int counter = 0;
   Timer timer;
@@ -77,13 +77,14 @@ class _ExercisePageState extends State<ExercisePage> {
     return completer.future;
   }
 
-  void validateAll() {}
+  void validateAll() {
+    //
+  }
 
   void save() {
     try {
       // TODO: create validation of fields
       validateAll();
-      throw AppError(message: "test");
     } on AppError catch (e) {
       CustomSnackBar(context, text: e.message);
     } catch (e) {
@@ -101,42 +102,43 @@ class _ExercisePageState extends State<ExercisePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Create workout",
+        title: "Crear ejercicio",
       ),
-      body: GridView.count(
-        crossAxisCount: 2,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-        padding: const EdgeInsets.all(15),
-        childAspectRatio: 1.45,
-        children: [
-          _ConfigSection(
-            label: "Conteo",
-            controller: _count,
+      body: SingleChildScrollView(
+        // scrollDirection: Axis.horizontal,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: 120,
+            minWidth: 360,
+            maxWidth: 400,
           ),
-          _ConfigSection(
-            label: "Intervalo de conteo (en segundos)",
-            controller: _intervalCount,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _ConfigSection(
+                    icon: Icons.arrow_circle_up,
+                    controller: _count,
+                  ),
+                  _ConfigSection(
+                    icon: Icons.more_time,
+                    controller: _intervalCount,
+                  ),
+                  _ConfigSection(
+                    icon: Icons.access_time_rounded,
+                    controller: _break,
+                  ),
+                  _ConfigSection(
+                    icon: Icons.autorenew,
+                    controller: _series,
+                  ),
+                ],
+              ),
+            ],
           ),
-          _ConfigSection(
-            label: "Reposo por serie (en segundos)",
-            controller: _break,
-          ),
-          _ConfigSection(
-            label: "Series",
-            controller: _series,
-          ),
-          _ConfigSection(
-            label: "Peso",
-            controller: _weight,
-          ),
-          Container(
-            child: Text(counter.toString()),
-          ),
-          Container(
-            child: Text(stage),
-          ),
-        ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.save),
@@ -147,12 +149,13 @@ class _ExercisePageState extends State<ExercisePage> {
 }
 
 class _ConfigSection extends StatelessWidget {
-  final String label;
+//   final String label;
+  final IconData icon;
   final TextEditingController controller;
 
   _ConfigSection({
     Key key,
-    @required this.label,
+    @required this.icon,
     this.controller,
   }) : super(key: key);
 
@@ -164,26 +167,34 @@ class _ConfigSection extends StatelessWidget {
         children: [
           SizedBox(
             height: 35,
-            child: Text(label),
+            width: 35,
+            child: Icon(
+              icon,
+              size: 35,
+            ),
           ),
-          SizedBox(
+          Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.only(top: 5),
             child: TextField(
               autofocus: false,
               keyboardType: TextInputType.number,
               controller: controller,
+              textAlign: TextAlign.center,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
+                isDense: true,
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 8,
+                ),
               ),
             ),
           )
         ],
       ),
-      height: 60,
-      width: 130,
-      padding: EdgeInsets.symmetric(
-        vertical: 10,
-        horizontal: 10,
-      ),
+      height: 90,
+      width: 90,
+      padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
       decoration: BoxDecoration(
         border: Border.all(
           color: theme.primaryColor,
