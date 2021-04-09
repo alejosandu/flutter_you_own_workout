@@ -18,6 +18,7 @@ class PrincipalPage extends StatelessWidget implements RouteName {
             final result = await Navigator.of(context)
                 .pushNamed(ExerciseView.routeName) as Exercise;
             debugPrint("result: ${result.toString()}");
+            if (result == null) return;
           } catch (e) {
             debugPrint(e.toString());
           }

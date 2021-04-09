@@ -83,7 +83,16 @@ class _ExerciseViewState extends State<ExerciseView> {
   }
 
   void validateAll() {
-    //
+    if (_exerciseName.text.isEmpty)
+      throw AppError(message: "Nombre del ejercicio es requerido");
+    if (_count.text.isEmpty)
+      throw AppError(message: "Número de repeticiones es requirido");
+    if (_intervalCount.text.isEmpty)
+      throw AppError(message: "El intervalo de incremento es requirido");
+    if (_break.text.isEmpty)
+      throw AppError(message: "Tiempo de reposo es requirido");
+    if (_series.text.isEmpty)
+      throw AppError(message: "Cantidad de series es requirido");
   }
 
   Exercise createExercise() {

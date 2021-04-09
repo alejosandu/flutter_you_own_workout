@@ -1,4 +1,5 @@
 import 'generic_error.dart';
+import 'package:meta/meta.dart';
 
 class AppError implements GenericError {
   @override
@@ -9,6 +10,6 @@ class AppError implements GenericError {
 
   AppError({
     this.title,
-    this.message,
+    @required this.message,
   });
 }

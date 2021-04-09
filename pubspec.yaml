@@ -30,6 +30,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   just_audio: 0.7.3
   feature_discovery: 0.14.0
+  hive: 2.0.2
+  hive_flutter: 1.0.0
+  uuid: 3.0.4
 
 dev_dependencies:
   flutter_test:
