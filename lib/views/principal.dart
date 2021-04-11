@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/appbar.dart';
 import '../models/models.dart';
-import '../views/exerciseView.dart';
+import 'exerciseView/exerciseView.dart';
 
 class PrincipalPage extends StatelessWidget implements RouteName {
   static String routeName = '/';
