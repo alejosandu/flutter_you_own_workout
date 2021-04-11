@@ -1,4 +1,5 @@
 import 'package:uuid/uuid.dart';
+import 'package:meta/meta.dart';
 
 /// Model for exercise
 class Exercise {
@@ -11,18 +12,20 @@ class Exercise {
   double addedWeight;
 
   Exercise({
-    this.exerciseName,
-    this.count,
-    this.intervalCount,
-    this.breakDuration,
-    this.series,
+    String id,
+    @required this.exerciseName,
+    @required this.count,
+    @required this.intervalCount,
+    @required this.breakDuration,
+    @required this.series,
+    this.addedWeight,
   })  : assert(exerciseName != null),
         assert(count != null),
         assert(intervalCount != null),
         assert(breakDuration != null),
         assert(series != null) {
     final uuid = Uuid();
-    _id = uuid.v4();
+    _id = id ?? uuid.v4();
   }
 
   String get id => _id;

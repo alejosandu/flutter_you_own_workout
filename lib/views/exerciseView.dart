@@ -18,6 +18,7 @@ class _ExerciseViewState extends State<ExerciseView> {
   String stage = "";
   int counter = 0;
   Timer timer;
+  bool aditionalOptionsIsExpanded = false;
 
   final _exerciseName = TextEditingController();
 
@@ -102,15 +103,16 @@ class _ExerciseViewState extends State<ExerciseView> {
       intervalCount: double.parse(_intervalCount.text),
       breakDuration: double.parse(_break.text),
       series: int.parse(_series.text),
+      addedWeight: _weight.text.isNotEmpty ? double.parse(_weight.text) : null,
     );
   }
 
   void save() {
     try {
-      // TODO: create validation of fields
       validateAll();
-      final Exercise exercise = createExercise();
-      Navigator.of(context).pop(exercise);
+      Exercise exercise = createExercise();
+      // TODO: guardar en base de datos los ejercicios creados
+      Navigator.of(context).pop();
     } on AppError catch (e) {
       CustomSnackBar(context, text: e.message);
     } on AssertionError catch (e) {
@@ -124,12 +126,12 @@ class _ExerciseViewState extends State<ExerciseView> {
     }
   }
 
-  void stop() {
-    //
-  }
-
   @override
   Widget build(BuildContext context) {
+    final IconData expandIcon = aditionalOptionsIsExpanded
+        ? Icons.keyboard_arrow_up
+        : Icons.keyboard_arrow_down;
+
     return Scaffold(
       appBar: CustomAppBar(
         title: "Crear ejercicio",
@@ -151,7 +153,7 @@ class _ExerciseViewState extends State<ExerciseView> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.only(bottom: 8),
                   child: TextField(
                     autofocus: false,
                     controller: _exerciseName,
@@ -186,9 +188,26 @@ class _ExerciseViewState extends State<ExerciseView> {
                     ),
                   ],
                 ),
-                ElevatedButton(
-                  child: Icon(Icons.add),
-                  onPressed: () {},
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: _AditionalConfig(
+                    expanded: aditionalOptionsIsExpanded,
+                    children: [
+                      _ConfigSection(
+                        icon: Icons.fitness_center,
+                        controller: _weight,
+                      ),
+                    ],
+                  ),
+                ),
+                ElevatedButton.icon(
+                  icon: Icon(expandIcon),
+                  label: Text("Agregar opciones"),
+                  onPressed: () {
+                    setState(() {
+                      aditionalOptionsIsExpanded = !aditionalOptionsIsExpanded;
+                    });
+                  },
                 ),
               ],
             ),
@@ -257,6 +276,33 @@ class _ConfigSection extends StatelessWidget {
         borderRadius: BorderRadius.all(
           Radius.circular(5),
         ),
+      ),
+    );
+  }
+}
+
+class _AditionalConfig extends StatelessWidget {
+  final bool expanded;
+  final List<Widget> children;
+
+  _AditionalConfig({
+    this.expanded = false,
+    this.children = const [],
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final double height = expanded ? 90 : 0;
+    return AnimatedContainer(
+      child: SingleChildScrollView(
+        child: Row(
+          children: children,
+        ),
+      ),
+      duration: const Duration(milliseconds: 200),
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
       ),
     );
   }
