@@ -22,9 +22,11 @@ class DismissibleContainer extends StatelessWidget {
       },
       background: Container(
         alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(left: 20),
         child: Icon(
-          Icons.add,
+          Icons.delete_forever,
           color: Colors.white,
+          size: 50,
         ),
         color: Colors.red,
       ),
