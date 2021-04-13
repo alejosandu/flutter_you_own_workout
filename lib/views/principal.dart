@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import '../widgets/appbar.dart';
-import '../models/models.dart';
 import 'exerciseView/exerciseView.dart';
 
-class PrincipalPage extends StatelessWidget implements RouteName {
-  static String routeName = '/';
+class PrincipalPage extends StatelessWidget {
+  static String get routeName => '/';
 
   @override
   Widget build(BuildContext context) {

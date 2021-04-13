@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'config/configurations.dart';
+import 'configurations/configurations.dart';
+import 'database/database.dart';
 
-void main() {
+void main() async {
+  await Database.init();
   runApp(MyApp());
 }
 

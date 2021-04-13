@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:yourownworkout/views/views.dart';
+import '../views/views.dart';
 
 final Map<String, WidgetBuilder> appRoutes = {
   PrincipalPage.routeName: (_) => PrincipalPage(),

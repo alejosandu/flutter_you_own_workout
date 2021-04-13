@@ -1,2 +1,5 @@
 export 'exercise.dart';
-export 'route_name.dart';
+
+abstract class BoxModel {
+  static String box;
+}

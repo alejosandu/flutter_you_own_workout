@@ -9,6 +9,13 @@ import 'configuration_section_container.dart';
 class ExerciseFormData {
   bool aditionalOptionsIsExpanded = false;
 
+  String _id;
+  String get id => _id;
+
+  ExerciseFormData({String id}) {
+    _id = id;
+  }
+
   final exerciseName = TextEditingController();
 
   final count = TextEditingController();
@@ -20,6 +27,18 @@ class ExerciseFormData {
   final series = TextEditingController();
 
   final weight = TextEditingController();
+
+  static fromExerciseModel(Exercise model) {
+    final exerciseFormData = ExerciseFormData(id: model.id);
+    exerciseFormData.exerciseName.text = model.exerciseName;
+    exerciseFormData.count.text = model.count.toString();
+    exerciseFormData.intervalCount.text = model.intervalCount.toString();
+    exerciseFormData.breakTime.text = model.breakDuration.toString();
+    exerciseFormData.series.text = model.series.toString();
+    exerciseFormData.weight.text =
+        model.addedWeight != null ? model.addedWeight.toString() : '';
+    return exerciseFormData;
+  }
 
   Exercise createExercise() {
     return Exercise(
