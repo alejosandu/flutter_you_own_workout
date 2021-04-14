@@ -5,8 +5,8 @@ import 'package:yourownworkout/models/models.dart';
 part 'exercise.g.dart';
 
 /// Model for exercise, each exercise make part of a full workout
-@HiveType(typeId: 1)
-class Exercise implements BoxModel {
+@HiveType(typeId: 1, adapterName: "ExerciseAdapter")
+class ExerciseModel implements BoxModel {
   static String get box => 'exercises';
 
   /// id for the exercise, should be the DB id
@@ -40,12 +40,12 @@ class Exercise implements BoxModel {
 
   // date when the object was created
   @HiveField(7)
-  late DateTime createdAt;
+  DateTime? createdAt;
 
   @override
   String toString() => "$_id: $exerciseName";
 
-  Exercise({
+  ExerciseModel({
     String? id,
     required this.exerciseName,
     required this.count,
@@ -53,6 +53,7 @@ class Exercise implements BoxModel {
     required this.breakDuration,
     required this.series,
     this.addedWeight,
+    this.createdAt,
   }) {
     final uuid = Uuid();
     _id = id ?? uuid.v4();

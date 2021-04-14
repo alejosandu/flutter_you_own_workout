@@ -7,7 +7,7 @@ import '../../../errors/errors.dart';
 import 'aditional_configuration_container.dart';
 import 'configuration_section_container.dart';
 
-class ExerciseFormData extends Exercise {
+class ExerciseFormData extends ExerciseModel {
   bool aditionalOptionsIsExpanded = false;
 
   ExerciseFormData({
@@ -33,22 +33,30 @@ class ExerciseFormData extends Exercise {
     breakDurationController.text = breakDuration.toStringEmpty;
     seriesController.text = series.toStringEmpty;
     weightController.text = addedWeight.toStringEmpty;
+    // agrega listeners para actualizar los datos de la clase padre cada vez que cambie los controllers
+    addListeners();
   }
 
   final exerciseNameController = TextEditingController();
+  setExerciseName(String value) => exerciseName = value;
 
   final countController = TextEditingController();
+  setCount(String value) => count = int.tryParse(value);
 
   final intervalCountController = TextEditingController();
+  setIntervalCount(String value) => intervalCount = double.tryParse(value);
 
   final breakDurationController = TextEditingController();
+  setBreakDuration(String value) => breakDuration = double.tryParse(value);
 
   final seriesController = TextEditingController();
+  setSeries(String value) => series = int.tryParse(value);
 
   final weightController = TextEditingController();
+  setWeight(String value) => addedWeight = double.tryParse(value);
 
-  static fromExerciseModel(Exercise exercise) {
-    return ExerciseFormData(
+  static fromExerciseModel(ExerciseModel exercise) {
+    final exerciseFormData = ExerciseFormData(
       id: exercise.id,
       exerciseName: exercise.exerciseName,
       count: exercise.count,
@@ -57,17 +65,31 @@ class ExerciseFormData extends Exercise {
       series: exercise.series,
       addedWeight: exercise.addedWeight,
     );
+    exerciseFormData.createdAt = exercise.createdAt;
+    return exerciseFormData;
   }
 
-  Exercise createExercise() {
-    return Exercise(
+  addListeners() {
+    exerciseNameController
+        .addListener(() => setExerciseName(exerciseNameController.text));
+    countController.addListener(() => setCount(countController.text));
+    intervalCountController
+        .addListener(() => setIntervalCount(intervalCountController.text));
+    breakDurationController
+        .addListener(() => setBreakDuration(breakDurationController.text));
+    seriesController.addListener(() => setSeries(seriesController.text));
+    weightController.addListener(() => setWeight(weightController.text));
+  }
+
+  ExerciseModel createExercise() {
+    return ExerciseModel(
       exerciseName: exerciseNameController.text,
-      count: int.parse(countController.text),
-      intervalCount: double.parse(intervalCountController.text),
-      breakDuration: double.parse(breakDurationController.text),
-      series: int.parse(seriesController.text),
+      count: int.tryParse(countController.text),
+      intervalCount: double.tryParse(intervalCountController.text),
+      breakDuration: double.tryParse(breakDurationController.text),
+      series: int.tryParse(seriesController.text),
       addedWeight: weightController.text.isNotEmpty
-          ? double.parse(weightController.text)
+          ? double.tryParse(weightController.text)
           : null,
     );
   }

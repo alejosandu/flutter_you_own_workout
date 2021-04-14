@@ -27,7 +27,7 @@ class _ExerciseViewState extends State<ExerciseView>
 
   void addItem() {
     setState(() {
-      exercises.add(ExerciseFormData());
+      exercises.insert(0, ExerciseFormData());
     });
   }
 
@@ -39,25 +39,12 @@ class _ExerciseViewState extends State<ExerciseView>
     try {
       validateAll();
 
-      List<Exercise> newExercises = exercises
-          .map((exercise) => Exercise(
-                id: exercise.id,
-                exerciseName: exercise.exerciseNameController.text,
-                count: int.parse(exercise.countController.text),
-                intervalCount:
-                    double.parse(exercise.intervalCountController.text),
-                breakDuration:
-                    double.parse(exercise.breakDurationController.text),
-                series: int.parse(exercise.seriesController.text),
-                addedWeight: exercise.weightController.text.isNotEmpty
-                    ? double.parse(exercise.weightController.text)
-                    : null,
-              ))
-          .toList();
+      //   List<Exercise> newExercises = exercises.toList();
 
-      final box = await Database.connection?.open<Exercise>(Exercise.box);
+      final box =
+          await Database.connection?.open<ExerciseModel>(ExerciseModel.box);
 
-      newExercises.forEach((exercise) => box?.put(exercise.id, exercise));
+      exercises.forEach((exercise) => box?.put(exercise.id, exercise));
       // TODO: guardar en base de datos los ejercicios creados
       Navigator.of(context).pop();
     } on AppError catch (e) {
@@ -73,21 +60,29 @@ class _ExerciseViewState extends State<ExerciseView>
     }
   }
 
-  void removeItem(dynamic index) {
+  void removeItem<ExerciseFormData>(item) async {
+    final box =
+        await Database.connection?.open<ExerciseModel>(ExerciseModel.box);
     setState(() {
-      exercises.remove(index);
+      box?.delete(item.id);
+      exercises.remove(item);
     });
   }
 
   loadSaved() async {
     try {
-      final box = await Database.connection?.open<Exercise>(Exercise.box);
-      final exercisesFormData = box?.values.map<ExerciseFormData>(
-        (exercise) => ExerciseFormData.fromExerciseModel(exercise),
-      );
+      final box =
+          await Database.connection?.open<ExerciseModel>(ExerciseModel.box);
+      final exercisesFormData = box?.values
+          .map<ExerciseFormData>(
+            (exercise) => ExerciseFormData.fromExerciseModel(exercise),
+          )
+          .toList()
+            ?..sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
       setState(() {
         // si está vacío significa se agrega uno default
-        if (exercisesFormData == null) {
+        if (exercisesFormData == null) return;
+        if (exercisesFormData.isEmpty) {
           exercises.add(ExerciseFormData());
         } else {
           exercises.addAll(exercisesFormData);
@@ -121,8 +116,8 @@ class _ExerciseViewState extends State<ExerciseView>
       appBar: CustomAppBar(
         title: "Crear ejercicio",
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 5),
+      body: Container(
+        margin: const EdgeInsets.only(top: 5),
         child: ListView.custom(
           childrenDelegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {

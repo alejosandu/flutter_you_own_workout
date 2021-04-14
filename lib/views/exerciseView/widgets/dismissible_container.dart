@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
+typedef void DismissedFunction<T>(item);
+
 class DismissibleContainer extends StatelessWidget {
   final dynamic index;
-  final Function onDismissed;
+  final DismissedFunction onDismissed;
   final Widget child;
 
   DismissibleContainer({
     this.index,
     required this.child,
-    required this.onDismissed(index),
+    required this.onDismissed,
   });
 
   @override

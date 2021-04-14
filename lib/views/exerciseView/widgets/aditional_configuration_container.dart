@@ -18,7 +18,7 @@ class AditionalConfigurationContainer extends StatelessWidget {
           children: children,
         ),
       ),
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 100),
       height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),

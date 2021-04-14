@@ -6,30 +6,29 @@ part of 'exercise.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ExerciseAdapter extends TypeAdapter<Exercise> {
+class ExerciseAdapter extends TypeAdapter<ExerciseModel> {
   @override
   final int typeId = 1;
 
   @override
-  Exercise read(BinaryReader reader) {
+  ExerciseModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Exercise(
-      exerciseName: fields[1] as String,
-      count: fields[2] as int,
-      intervalCount: fields[3] as double,
-      breakDuration: fields[4] as double,
-      series: fields[5] as int,
-      addedWeight: fields[6] as double,
-    )
-      .._id = fields[0] as String
-      ..createdAt = fields[7] as DateTime;
+    return ExerciseModel(
+      exerciseName: fields[1] as String?,
+      count: fields[2] as int?,
+      intervalCount: fields[3] as double?,
+      breakDuration: fields[4] as double?,
+      series: fields[5] as int?,
+      addedWeight: fields[6] as double?,
+      createdAt: fields[7] as DateTime?,
+    ).._id = fields[0] as String;
   }
 
   @override
-  void write(BinaryWriter writer, Exercise obj) {
+  void write(BinaryWriter writer, ExerciseModel obj) {
     writer
       ..writeByte(8)
       ..writeByte(0)
