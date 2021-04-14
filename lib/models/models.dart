@@ -1,5 +1,5 @@
 export 'exercise.dart';
 
 abstract class BoxModel {
-  static String box;
+  static late String box;
 }

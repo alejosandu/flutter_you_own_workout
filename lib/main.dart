@@ -12,14 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Your own workout',
       theme: appTheme,
       routes: appRoutes,
-      onGenerateRoute: (settings) {
-        debugPrint(settings.arguments);
-        // return MaterialPageRoute(builder: appRoutes[settings.name]);
-        return null;
-      },
       initialRoute: "/",
     );
   }

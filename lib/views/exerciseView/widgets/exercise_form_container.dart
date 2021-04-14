@@ -1,71 +1,92 @@
 import 'package:flutter/material.dart';
 
+import '../../../extensions/num_extensions.dart';
 import '../../../models/models.dart';
 import '../../../errors/errors.dart';
 
 import 'aditional_configuration_container.dart';
 import 'configuration_section_container.dart';
 
-class ExerciseFormData {
+class ExerciseFormData extends Exercise {
   bool aditionalOptionsIsExpanded = false;
 
-  String _id;
-  String get id => _id;
-
-  ExerciseFormData({String id}) {
-    _id = id;
+  ExerciseFormData({
+    String? id,
+    String? exerciseName,
+    int? count,
+    double? intervalCount,
+    double? breakDuration,
+    int? series,
+    double? addedWeight,
+  }) : super(
+          id: id,
+          exerciseName: exerciseName,
+          count: count,
+          intervalCount: intervalCount,
+          breakDuration: breakDuration,
+          series: series,
+          addedWeight: addedWeight,
+        ) {
+    exerciseNameController.text = exerciseName as String;
+    countController.text = count.toStringEmpty;
+    intervalCountController.text = intervalCount.toStringEmpty;
+    breakDurationController.text = breakDuration.toStringEmpty;
+    seriesController.text = series.toStringEmpty;
+    weightController.text = addedWeight.toStringEmpty;
   }
 
-  final exerciseName = TextEditingController();
+  final exerciseNameController = TextEditingController();
 
-  final count = TextEditingController();
+  final countController = TextEditingController();
 
-  final intervalCount = TextEditingController();
+  final intervalCountController = TextEditingController();
 
-  final breakTime = TextEditingController();
+  final breakDurationController = TextEditingController();
 
-  final series = TextEditingController();
+  final seriesController = TextEditingController();
 
-  final weight = TextEditingController();
+  final weightController = TextEditingController();
 
-  static fromExerciseModel(Exercise model) {
-    final exerciseFormData = ExerciseFormData(id: model.id);
-    exerciseFormData.exerciseName.text = model.exerciseName;
-    exerciseFormData.count.text = model.count.toString();
-    exerciseFormData.intervalCount.text = model.intervalCount.toString();
-    exerciseFormData.breakTime.text = model.breakDuration.toString();
-    exerciseFormData.series.text = model.series.toString();
-    exerciseFormData.weight.text =
-        model.addedWeight != null ? model.addedWeight.toString() : '';
-    return exerciseFormData;
+  static fromExerciseModel(Exercise exercise) {
+    return ExerciseFormData(
+      id: exercise.id,
+      exerciseName: exercise.exerciseName,
+      count: exercise.count,
+      intervalCount: exercise.intervalCount,
+      breakDuration: exercise.breakDuration,
+      series: exercise.series,
+      addedWeight: exercise.addedWeight,
+    );
   }
 
   Exercise createExercise() {
     return Exercise(
-      exerciseName: exerciseName.text,
-      count: int.parse(count.text),
-      intervalCount: double.parse(intervalCount.text),
-      breakDuration: double.parse(breakTime.text),
-      series: int.parse(series.text),
-      addedWeight: weight.text.isNotEmpty ? double.parse(weight.text) : null,
+      exerciseName: exerciseNameController.text,
+      count: int.parse(countController.text),
+      intervalCount: double.parse(intervalCountController.text),
+      breakDuration: double.parse(breakDurationController.text),
+      series: int.parse(seriesController.text),
+      addedWeight: weightController.text.isNotEmpty
+          ? double.parse(weightController.text)
+          : null,
     );
   }
 
   void validateAll() {
-    if (exerciseName.text.isEmpty)
+    if (exerciseNameController.text.isEmpty)
       throw AppError(message: "Nombre del ejercicio es requerido");
-    if (count.text.isEmpty)
+    if (countController.text.isEmpty)
       throw AppError(message: "Número de repeticiones es requirido");
-    if (intervalCount.text.isEmpty)
+    if (intervalCountController.text.isEmpty)
       throw AppError(message: "El intervalo de incremento es requirido");
-    if (breakTime.text.isEmpty)
+    if (breakDurationController.text.isEmpty)
       throw AppError(message: "Tiempo de reposo es requirido");
-    if (series.text.isEmpty)
+    if (seriesController.text.isEmpty)
       throw AppError(message: "Cantidad de series es requirido");
   }
 
   /// update the state on the parent widget using widgets setState as callback
-  Function setState;
+  late Function setState;
 
   set setterState(Function setState) {
     this.setState = setState;
@@ -109,7 +130,7 @@ class _ExerciseFormContainerState extends State<ExerciseFormContainer>
             padding: const EdgeInsets.only(bottom: 8),
             child: TextField(
               autofocus: false,
-              controller: widget.formData.exerciseName,
+              controller: widget.formData.exerciseNameController,
               textAlign: TextAlign.center,
               textAlignVertical: TextAlignVertical.center,
               textCapitalization: TextCapitalization.sentences,
@@ -125,19 +146,19 @@ class _ExerciseFormContainerState extends State<ExerciseFormContainer>
             children: [
               ConfigurationSectionContainer(
                 icon: Icons.arrow_circle_up,
-                controller: widget.formData.count,
+                controller: widget.formData.countController,
               ),
               ConfigurationSectionContainer(
                 icon: Icons.more_time,
-                controller: widget.formData.intervalCount,
+                controller: widget.formData.intervalCountController,
               ),
               ConfigurationSectionContainer(
                 icon: Icons.access_time_rounded,
-                controller: widget.formData.breakTime,
+                controller: widget.formData.breakDurationController,
               ),
               ConfigurationSectionContainer(
                 icon: Icons.autorenew,
-                controller: widget.formData.series,
+                controller: widget.formData.seriesController,
               ),
             ],
           ),
@@ -148,7 +169,7 @@ class _ExerciseFormContainerState extends State<ExerciseFormContainer>
               children: [
                 ConfigurationSectionContainer(
                   icon: Icons.fitness_center,
-                  controller: widget.formData.weight,
+                  controller: widget.formData.weightController,
                 ),
               ],
             ),

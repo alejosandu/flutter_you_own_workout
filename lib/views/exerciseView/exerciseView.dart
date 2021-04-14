@@ -22,8 +22,8 @@ class _ExerciseViewState extends State<ExerciseView>
     with TickerProviderStateMixin {
   List<ExerciseFormData> exercises = [];
 
-  Animation<double> _animation;
-  AnimationController _animationController;
+  late Animation<double> _animation;
+  late AnimationController _animationController;
 
   void addItem() {
     setState(() {
@@ -42,30 +42,32 @@ class _ExerciseViewState extends State<ExerciseView>
       List<Exercise> newExercises = exercises
           .map((exercise) => Exercise(
                 id: exercise.id,
-                exerciseName: exercise.exerciseName.text,
-                count: int.parse(exercise.count.text),
-                intervalCount: double.parse(exercise.intervalCount.text),
-                breakDuration: double.parse(exercise.breakTime.text),
-                series: int.parse(exercise.series.text),
-                addedWeight: exercise.weight.text.isNotEmpty
-                    ? double.parse(exercise.weight.text)
+                exerciseName: exercise.exerciseNameController.text,
+                count: int.parse(exercise.countController.text),
+                intervalCount:
+                    double.parse(exercise.intervalCountController.text),
+                breakDuration:
+                    double.parse(exercise.breakDurationController.text),
+                series: int.parse(exercise.seriesController.text),
+                addedWeight: exercise.weightController.text.isNotEmpty
+                    ? double.parse(exercise.weightController.text)
                     : null,
               ))
           .toList();
 
-      final box = await Database.connection.open<Exercise>(Exercise.box);
+      final box = await Database.connection?.open<Exercise>(Exercise.box);
 
-      newExercises.forEach((exercise) => box.put(exercise.id, exercise));
+      newExercises.forEach((exercise) => box?.put(exercise.id, exercise));
       // TODO: guardar en base de datos los ejercicios creados
       Navigator.of(context).pop();
     } on AppError catch (e) {
       CustomSnackBar(context, text: e.message);
     } on AssertionError catch (e) {
       if (e.message is AppError) {
-        final AppError error = e.message;
+        final error = e.message as AppError;
         CustomSnackBar(context, text: error.message);
       }
-      debugPrint(e.message);
+      debugPrint(e.message.toString());
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -79,14 +81,17 @@ class _ExerciseViewState extends State<ExerciseView>
 
   loadSaved() async {
     try {
-      final box = await Database.connection.open<Exercise>(Exercise.box);
-      final exercisesFormData = box.values.map<ExerciseFormData>(
+      final box = await Database.connection?.open<Exercise>(Exercise.box);
+      final exercisesFormData = box?.values.map<ExerciseFormData>(
         (exercise) => ExerciseFormData.fromExerciseModel(exercise),
       );
       setState(() {
         // si está vacío significa se agrega uno default
-        if (exercisesFormData.isEmpty) exercises.add(ExerciseFormData());
-        exercises.addAll(exercisesFormData);
+        if (exercisesFormData == null) {
+          exercises.add(ExerciseFormData());
+        } else {
+          exercises.addAll(exercisesFormData);
+        }
       });
     } catch (e) {
       debugPrint(e.toString());
@@ -131,7 +136,7 @@ class _ExerciseViewState extends State<ExerciseView>
             findChildIndexCallback: (Key key) {
               // llamado en caso de reordenamiento
               debugPrint(key.toString());
-              final ValueKey valueKey = key;
+              final ValueKey valueKey = key as ValueKey;
               return exercises.indexOf(valueKey.value);
             },
           ),

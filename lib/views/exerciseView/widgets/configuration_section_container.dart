@@ -5,9 +5,9 @@ class ConfigurationSectionContainer extends StatelessWidget {
   final TextEditingController controller;
 
   ConfigurationSectionContainer({
-    Key key,
-    @required this.icon,
-    this.controller,
+    Key? key,
+    required this.icon,
+    required this.controller,
   }) : super(key: key);
 
   @override

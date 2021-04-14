@@ -1,5 +1,4 @@
 import 'package:uuid/uuid.dart';
-import 'package:meta/meta.dart';
 import 'package:hive/hive.dart';
 import 'package:yourownworkout/models/models.dart';
 
@@ -12,58 +11,51 @@ class Exercise implements BoxModel {
 
   /// id for the exercise, should be the DB id
   @HiveField(0)
-  String _id;
+  late String _id;
   String get id => _id;
 
   /// Exercise name to group all the information
   @HiveField(1)
-  String exerciseName;
+  String? exerciseName;
 
   /// Amount of repetitions to do for this exercise
   @HiveField(2)
-  int count;
+  int? count;
 
   /// The time to wait to add 1 to the `count`
   @HiveField(3)
-  double intervalCount;
+  double? intervalCount;
 
   /// time to  wait until the next `serie`
   @HiveField(4)
-  double breakDuration;
+  double? breakDuration;
 
   /// the amount of series to repeat
   @HiveField(5)
-  int series;
+  int? series;
 
   /// (optional) weight added to this exercise
   @HiveField(6)
-  double addedWeight;
+  double? addedWeight;
 
   // date when the object was created
   @HiveField(7)
-  DateTime createdAt;
-
-  // date when the object was last modified
-  @HiveField(8)
-  DateTime modifiedAt;
+  late DateTime createdAt;
 
   @override
   String toString() => "$_id: $exerciseName";
 
   Exercise({
-    String id,
-    @required this.exerciseName,
-    @required this.count,
-    @required this.intervalCount,
-    @required this.breakDuration,
-    @required this.series,
+    String? id,
+    required this.exerciseName,
+    required this.count,
+    required this.intervalCount,
+    required this.breakDuration,
+    required this.series,
     this.addedWeight,
-  })  : assert(exerciseName != null),
-        assert(count != null),
-        assert(intervalCount != null),
-        assert(breakDuration != null),
-        assert(series != null) {
+  }) {
     final uuid = Uuid();
     _id = id ?? uuid.v4();
+    if (id == null) createdAt = DateTime.now();
   }
 }

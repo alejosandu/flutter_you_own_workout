@@ -7,8 +7,8 @@ class DismissibleContainer extends StatelessWidget {
 
   DismissibleContainer({
     this.index,
-    this.child,
-    this.onDismissed(index),
+    required this.child,
+    required this.onDismissed(index),
   });
 
   @override

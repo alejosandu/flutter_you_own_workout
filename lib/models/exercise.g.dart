@@ -25,14 +25,13 @@ class ExerciseAdapter extends TypeAdapter<Exercise> {
       addedWeight: fields[6] as double,
     )
       .._id = fields[0] as String
-      ..createdAt = fields[7] as DateTime
-      ..modifiedAt = fields[8] as DateTime;
+      ..createdAt = fields[7] as DateTime;
   }
 
   @override
   void write(BinaryWriter writer, Exercise obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj._id)
       ..writeByte(1)
@@ -48,9 +47,7 @@ class ExerciseAdapter extends TypeAdapter<Exercise> {
       ..writeByte(6)
       ..write(obj.addedWeight)
       ..writeByte(7)
-      ..write(obj.createdAt)
-      ..writeByte(8)
-      ..write(obj.modifiedAt);
+      ..write(obj.createdAt);
   }
 
   @override

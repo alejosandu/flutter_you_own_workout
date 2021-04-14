@@ -5,10 +5,10 @@ import '../models/models.dart';
 // to generate run flutter packages pub run build_runner build
 
 class Database {
-  static Database _instance;
+  static Database? _instance;
   Database._();
 
-  static Database get connection => _instance;
+  static Database? get connection => _instance;
 
   static init() async {
     if (_instance != null) return Database._();

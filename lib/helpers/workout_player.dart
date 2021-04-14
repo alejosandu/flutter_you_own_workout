@@ -2,12 +2,19 @@ import 'dart:async';
 
 class WorkoutPlayer {
   int counter = 0;
-  Timer timer;
+  late Timer timer;
 
   int count;
   double intervalCount;
-  int breakTime;
+  int breakDuration;
   int series;
+
+  WorkoutPlayer({
+    required this.count,
+    required this.intervalCount,
+    required this.breakDuration,
+    required this.series,
+  });
 
   void startCycling() async {
     for (var i = 0; i < series; i++) {
@@ -35,7 +42,7 @@ class WorkoutPlayer {
     final completer = Completer();
     final time = 1000;
     final duration = Duration(milliseconds: time);
-    counter = breakTime;
+    counter = breakDuration;
     timer = Timer.periodic(duration, (_) {
       counter--;
       if (0 > counter) {
