@@ -23,8 +23,9 @@ class ExerciseAdapter extends TypeAdapter<ExerciseModel> {
       breakDuration: fields[4] as double,
       series: fields[5] as int,
       addedWeight: fields[6] as double?,
-      createdAt: fields[7] as DateTime?,
-    ).._id = fields[0] as String;
+    )
+      .._id = fields[0] as String
+      .._createdAt = fields[7] as DateTime;
   }
 
   @override
@@ -46,7 +47,7 @@ class ExerciseAdapter extends TypeAdapter<ExerciseModel> {
       ..writeByte(6)
       ..write(obj.addedWeight)
       ..writeByte(7)
-      ..write(obj.createdAt);
+      ..write(obj._createdAt);
   }
 
   @override
