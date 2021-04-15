@@ -40,7 +40,8 @@ class ExerciseModel implements BoxModel {
 
   // date when the object was created
   @HiveField(7)
-  late DateTime createdAt;
+  late DateTime _createdAt;
+  DateTime get createdAt => _createdAt;
 
   @override
   String toString() => "$_id: $exerciseName";
@@ -57,6 +58,6 @@ class ExerciseModel implements BoxModel {
   }) {
     final uuid = Uuid();
     _id = id ?? uuid.v4();
-    this.createdAt = createdAt ?? DateTime.now();
+    this._createdAt = createdAt ?? DateTime.now();
   }
 }
