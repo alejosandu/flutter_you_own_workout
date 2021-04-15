@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 
-import 'package:yourownworkout/widgets/custom_snackbar.dart';
-
+import '../../widgets/custom_snackbar.dart';
 import '../../widgets/widgets.dart';
 import '../../errors/errors.dart';
 import '../../database/database.dart';
 import '../../models/exercise.dart';
 
-import './widgets/dismissible_container.dart';
-import './widgets/exercise_form_container.dart';
+import 'widgets/dismissible_container.dart';
+import 'widgets/exercise_form_container.dart';
+import 'widgets/exercise_form_data.dart';
 
 class ExerciseView extends StatefulWidget {
   static String get routeName => "/createExercise";
@@ -45,7 +45,7 @@ class _ExerciseViewState extends State<ExerciseView>
           await Database.connection?.open<ExerciseModel>(ExerciseModel.box);
 
       exercises.forEach((exercise) => box?.put(exercise.id, exercise));
-      // TODO: guardar en base de datos los ejercicios creados
+      CustomSnackBar(context, text: "Ejercicios guardados");
       Navigator.of(context).pop();
     } on AppError catch (e) {
       CustomSnackBar(context, text: e.message);
@@ -78,7 +78,7 @@ class _ExerciseViewState extends State<ExerciseView>
             (exercise) => ExerciseFormData.fromExerciseModel(exercise),
           )
           .toList()
-            ?..sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
+            ?..sort((a, b) => a.createdAt.compareTo(b.createdAt));
       setState(() {
         // si está vacío significa se agrega uno default
         if (exercisesFormData == null) return;

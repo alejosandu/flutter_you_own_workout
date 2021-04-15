@@ -1,14 +1,33 @@
 import 'package:flutter/material.dart';
 
-class ConfigurationSectionContainer extends StatelessWidget {
+typedef void OnChangedFunction(String value);
+
+class ConfigurationSectionContainer extends StatefulWidget {
   final IconData icon;
-  final TextEditingController controller;
+  final OnChangedFunction onChanged;
+  final String defaultValue;
 
   ConfigurationSectionContainer({
     Key? key,
     required this.icon,
-    required this.controller,
+    required this.onChanged,
+    this.defaultValue = '',
   }) : super(key: key);
+
+  @override
+  _ConfigurationSectionContainerState createState() =>
+      _ConfigurationSectionContainerState();
+}
+
+class _ConfigurationSectionContainerState
+    extends State<ConfigurationSectionContainer> {
+  final _controller = TextEditingController();
+
+  @override
+  void initState() {
+    _controller.text = widget.defaultValue;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +39,7 @@ class ConfigurationSectionContainer extends StatelessWidget {
             height: 35,
             width: 35,
             child: Icon(
-              icon,
+              widget.icon,
               size: 35,
             ),
           ),
@@ -30,7 +49,8 @@ class ConfigurationSectionContainer extends StatelessWidget {
             child: TextField(
               autofocus: false,
               keyboardType: TextInputType.number,
-              controller: controller,
+              onChanged: widget.onChanged,
+              controller: _controller,
               textAlign: TextAlign.center,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
@@ -54,6 +74,49 @@ class ConfigurationSectionContainer extends StatelessWidget {
         borderRadius: BorderRadius.all(
           Radius.circular(5),
         ),
+      ),
+    );
+  }
+}
+
+class ConfigurationExerciseName extends StatefulWidget {
+  final String label;
+  final OnChangedFunction onChanged;
+  final String? defaultValue;
+
+  ConfigurationExerciseName({
+    required this.label,
+    required this.onChanged,
+    this.defaultValue = '',
+  });
+
+  @override
+  _ConfigurationExerciseNameState createState() =>
+      _ConfigurationExerciseNameState();
+}
+
+class _ConfigurationExerciseNameState extends State<ConfigurationExerciseName> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    _controller.text = widget.defaultValue as String;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      autofocus: false,
+      onChanged: widget.onChanged,
+      controller: _controller,
+      textAlign: TextAlign.center,
+      textAlignVertical: TextAlignVertical.center,
+      textCapitalization: TextCapitalization.sentences,
+      decoration: InputDecoration(
+        labelText: widget.label,
+        border: OutlineInputBorder(),
+        isDense: true,
       ),
     );
   }

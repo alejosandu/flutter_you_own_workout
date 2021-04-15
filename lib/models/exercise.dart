@@ -16,23 +16,23 @@ class ExerciseModel implements BoxModel {
 
   /// Exercise name to group all the information
   @HiveField(1)
-  String? exerciseName;
+  String exerciseName;
 
   /// Amount of repetitions to do for this exercise
   @HiveField(2)
-  int? count;
+  int count;
 
   /// The time to wait to add 1 to the `count`
   @HiveField(3)
-  double? intervalCount;
+  double intervalCount;
 
   /// time to  wait until the next `serie`
   @HiveField(4)
-  double? breakDuration;
+  double breakDuration;
 
   /// the amount of series to repeat
   @HiveField(5)
-  int? series;
+  int series;
 
   /// (optional) weight added to this exercise
   @HiveField(6)
@@ -40,23 +40,23 @@ class ExerciseModel implements BoxModel {
 
   // date when the object was created
   @HiveField(7)
-  DateTime? createdAt;
+  late DateTime createdAt;
 
   @override
   String toString() => "$_id: $exerciseName";
 
   ExerciseModel({
     String? id,
-    required this.exerciseName,
-    required this.count,
-    required this.intervalCount,
-    required this.breakDuration,
-    required this.series,
-    this.addedWeight,
-    this.createdAt,
+    this.exerciseName = '',
+    this.count = 0,
+    this.intervalCount = 0,
+    this.breakDuration = 0,
+    this.series = 0,
+    this.addedWeight = 0,
+    DateTime? createdAt,
   }) {
     final uuid = Uuid();
     _id = id ?? uuid.v4();
-    if (id == null) createdAt = DateTime.now();
+    this.createdAt = createdAt ?? DateTime.now();
   }
 }
