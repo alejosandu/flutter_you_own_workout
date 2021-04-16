@@ -14,16 +14,12 @@ class ExerciseFormContainer extends StatefulWidget {
   _ExerciseFormContainerState createState() => _ExerciseFormContainerState();
 }
 
-class _ExerciseFormContainerState extends State<ExerciseFormContainer>
-    with AutomaticKeepAliveClientMixin {
+class _ExerciseFormContainerState extends State<ExerciseFormContainer> {
   @override
   void initState() {
     widget.formData.setterState = setState;
     super.initState();
   }
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {

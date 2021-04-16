@@ -7,7 +7,7 @@ part 'exercise.g.dart';
 /// Model for exercise, each exercise make part of a full workout
 @HiveType(typeId: 1, adapterName: "ExerciseAdapter")
 class ExerciseModel implements BoxModel {
-  static String get box => 'exercises';
+  static String get boxName => 'exercises';
 
   /// id for the exercise, should be the DB id
   @HiveField(0)

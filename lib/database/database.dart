@@ -10,7 +10,7 @@ class Database {
 
   static Database? get connection => _instance;
 
-  static init() async {
+  static Future init() async {
     if (_instance != null) return Database._();
     await Hive.initFlutter();
     Hive.registerAdapter(ExerciseAdapter());

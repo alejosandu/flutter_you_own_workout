@@ -4,7 +4,7 @@ import 'package:floating_action_bubble/floating_action_bubble.dart';
 import '../../widgets/custom_snackbar.dart';
 import '../../widgets/widgets.dart';
 import '../../errors/errors.dart';
-import '../../database/database.dart';
+import '../../database/repository.dart';
 import '../../models/exercise.dart';
 
 import 'widgets/dismissible_container.dart';
@@ -22,6 +22,8 @@ class _ExerciseViewState extends State<ExerciseView>
     with TickerProviderStateMixin {
   List<ExerciseFormData> exercises = [];
 
+  final exerciseRepository = Repository<ExerciseModel>(ExerciseModel.boxName);
+
   late Animation<double> _animation;
   late AnimationController _animationController;
 
@@ -32,19 +34,14 @@ class _ExerciseViewState extends State<ExerciseView>
   }
 
   void validateAll() {
-    // TODO: agregar arreglo para que vaya iterando y validando cada uno de los campos
+    // TODO: add list and iterate to validate each field
   }
 
   void save() async {
     try {
       validateAll();
 
-      //   List<Exercise> newExercises = exercises.toList();
-
-      final box =
-          await Database.connection?.open<ExerciseModel>(ExerciseModel.box);
-
-      exercises.forEach((exercise) => box?.put(exercise.id, exercise));
+      exercises.forEach((exercise) => exerciseRepository.put(exercise));
       CustomSnackBar(context, text: "Ejercicios guardados");
       Navigator.of(context).pop();
     } on AppError catch (e) {
@@ -61,27 +58,23 @@ class _ExerciseViewState extends State<ExerciseView>
   }
 
   void removeItem<ExerciseFormData>(item) async {
-    final box =
-        await Database.connection?.open<ExerciseModel>(ExerciseModel.box);
     setState(() {
-      box?.delete(item.id);
+      exerciseRepository.delete(item);
       exercises.remove(item);
     });
   }
 
   loadSaved() async {
     try {
-      final box =
-          await Database.connection?.open<ExerciseModel>(ExerciseModel.box);
-      final exercisesFormData = box?.values
+      await exerciseRepository.isReady;
+      final exercisesFormData = exerciseRepository.values
           .map<ExerciseFormData>(
             (exercise) => ExerciseFormData.fromExerciseModel(exercise),
           )
           .toList()
-            ?..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+            ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
       setState(() {
-        // si está vacío significa se agrega uno default
-        if (exercisesFormData == null) return;
+        // if its empty add a default
         if (exercisesFormData.isEmpty) {
           exercises.add(ExerciseFormData());
         } else {
@@ -129,7 +122,7 @@ class _ExerciseViewState extends State<ExerciseView>
             },
             childCount: exercises.length,
             findChildIndexCallback: (Key key) {
-              // llamado en caso de reordenamiento
+              // called when reordering
               debugPrint(key.toString());
               final ValueKey valueKey = key as ValueKey;
               return exercises.indexOf(valueKey.value);
