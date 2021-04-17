@@ -34,25 +34,23 @@ class _ExerciseViewState extends State<ExerciseView>
   }
 
   void validateAll() {
-    // TODO: add list and iterate to validate each field
+    final result = exercises.any((exercise) => exercise.validateFields);
+    if (result) {
+      setState(() {});
+      throw AppError(message: "Algunos campos tienen errores");
+    }
   }
 
   void save() async {
     try {
       validateAll();
-
       exercises.forEach((exercise) => exerciseRepository.put(exercise));
       CustomSnackBar(context, text: "Ejercicios guardados");
       Navigator.of(context).pop();
     } on AppError catch (e) {
       CustomSnackBar(context, text: e.message);
-    } on AssertionError catch (e) {
-      if (e.message is AppError) {
-        final error = e.message as AppError;
-        CustomSnackBar(context, text: error.message);
-      }
-      debugPrint(e.message.toString());
     } catch (e) {
+      CustomSnackBar(context, text: "Ocurrió un error al guardar");
       debugPrint(e.toString());
     }
   }
@@ -82,6 +80,7 @@ class _ExerciseViewState extends State<ExerciseView>
         }
       });
     } catch (e) {
+      CustomSnackBar(context, text: "Ocurrió un error cargando los datos");
       debugPrint(e.toString());
     }
   }
@@ -110,7 +109,6 @@ class _ExerciseViewState extends State<ExerciseView>
         title: "Crear ejercicio",
       ),
       body: Container(
-        margin: const EdgeInsets.only(top: 5),
         child: ListView.custom(
           childrenDelegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {

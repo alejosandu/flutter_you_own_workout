@@ -1,6 +1,6 @@
 import '../../../extensions/num_extensions.dart';
 import '../../../models/models.dart';
-import '../../../errors/errors.dart';
+import '../../../helpers/validator.dart';
 
 class ExerciseFormData extends ExerciseModel {
   bool aditionalOptionsIsExpanded = false;
@@ -40,40 +40,59 @@ class ExerciseFormData extends ExerciseModel {
   }
 
   setExerciseName(String value) => exerciseName = value;
+  String? get exerciseNameIsValid {
+    return Validator([
+      Rule(
+        () => exerciseName.isEmpty,
+        "Nombre del ejercicio es requerido",
+      )
+    ]).test();
+  }
 
   setCount(String value) => count = int.tryParse(value) as int;
+  String? get countIsValid {
+    return Validator([
+      Rule(() => count.toStringEmpty.isEmpty, ""),
+      Rule(() => count <= 0, "")
+    ]).test();
+  }
 
   setIntervalCount(String value) =>
       intervalCount = double.tryParse(value) as double;
+  String? get intervalCountIsValid {
+    return Validator([
+      Rule(() => intervalCount.toStringEmpty.isEmpty, ""),
+      Rule(() => intervalCount <= 0, "")
+    ]).test();
+  }
 
   setBreakDuration(String value) =>
       breakDuration = double.tryParse(value) as double;
+  String? get breakDurationIsValid {
+    return Validator([
+      Rule(() => breakDuration.toStringEmpty.isEmpty, ""),
+      Rule(() => breakDuration <= 0, "")
+    ]).test();
+  }
 
   setSeries(String value) => series = int.tryParse(value) as int;
+  String? get seriesIsValid {
+    return Validator([
+      Rule(() => breakDuration.toStringEmpty.isEmpty, ""),
+      Rule(() => breakDuration <= 0, ""),
+    ]).test();
+  }
 
   setWeight(String value) => addedWeight = double.tryParse(value) as double;
 
-  void validateAll() {
-    if (exerciseName.isEmpty)
-      throw AppError(message: "Nombre del ejercicio es requerido");
-    if (count.toStringEmpty.isEmpty)
-      throw AppError(message: "Número de repeticiones es requirido");
-    if (intervalCount.toStringEmpty.isEmpty)
-      throw AppError(message: "El intervalo de incremento es requirido");
-    if (breakDuration.toStringEmpty.isEmpty)
-      throw AppError(message: "Tiempo de reposo es requirido");
-    if (series.toStringEmpty.isEmpty)
-      throw AppError(message: "Cantidad de series es requirido");
-  }
-
-  /// update the state on the parent widget using widgets setState as callback
-  late Function setState;
-
-  set setterState(Function setState) {
-    this.setState = setState;
-  }
-
-  void validateFields() {
-    setState();
+  bool get validateFields {
+    final result = [
+      exerciseNameIsValid,
+      countIsValid,
+      intervalCountIsValid,
+      breakDurationIsValid,
+      seriesIsValid,
+    ].any((v) => v != null);
+    return result;
   }
 }

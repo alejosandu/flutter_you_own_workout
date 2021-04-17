@@ -16,12 +16,6 @@ class ExerciseFormContainer extends StatefulWidget {
 
 class _ExerciseFormContainerState extends State<ExerciseFormContainer> {
   @override
-  void initState() {
-    widget.formData.setterState = setState;
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final IconData expandIcon = widget.formData.aditionalOptionsIsExpanded
         ? Icons.keyboard_arrow_up
@@ -37,32 +31,41 @@ class _ExerciseFormContainerState extends State<ExerciseFormContainer> {
               label: "Nombre del ejercicio",
               onChanged: widget.formData.setExerciseName,
               defaultValue: widget.formData.exerciseName,
+              isValid: widget.formData.exerciseNameIsValid,
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ConfigurationSectionContainer(
-                icon: Icons.arrow_circle_up,
-                onChanged: widget.formData.setCount,
-                defaultValue: widget.formData.count.toStringEmpty,
-              ),
-              ConfigurationSectionContainer(
-                icon: Icons.more_time,
-                onChanged: widget.formData.setIntervalCount,
-                defaultValue: widget.formData.intervalCount.toStringEmpty,
-              ),
-              ConfigurationSectionContainer(
-                icon: Icons.access_time_rounded,
-                onChanged: widget.formData.setBreakDuration,
-                defaultValue: widget.formData.breakDuration.toStringEmpty,
-              ),
-              ConfigurationSectionContainer(
-                icon: Icons.autorenew,
-                onChanged: widget.formData.setSeries,
-                defaultValue: widget.formData.series.toStringEmpty,
-              ),
-            ],
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: 300,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ConfigurationSectionContainer(
+                  icon: Icons.arrow_circle_up,
+                  onChanged: widget.formData.setCount,
+                  defaultValue: widget.formData.count.toStringEmpty,
+                  isValid: widget.formData.countIsValid,
+                ),
+                ConfigurationSectionContainer(
+                  icon: Icons.more_time,
+                  onChanged: widget.formData.setIntervalCount,
+                  defaultValue: widget.formData.intervalCount.toStringEmpty,
+                  isValid: widget.formData.intervalCountIsValid,
+                ),
+                ConfigurationSectionContainer(
+                    icon: Icons.access_time_rounded,
+                    onChanged: widget.formData.setBreakDuration,
+                    defaultValue: widget.formData.breakDuration.toStringEmpty,
+                    isValid: widget.formData.breakDurationIsValid),
+                ConfigurationSectionContainer(
+                  icon: Icons.autorenew,
+                  onChanged: widget.formData.setSeries,
+                  defaultValue: widget.formData.series.toStringEmpty,
+                  isValid: widget.formData.seriesIsValid,
+                ),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8),
@@ -89,13 +92,16 @@ class _ExerciseFormContainerState extends State<ExerciseFormContainer> {
           ),
         ],
       ),
-      padding: EdgeInsets.symmetric(
-        vertical: 8,
-        horizontal: 8,
+      padding: EdgeInsets.only(
+        top: 8,
+        left: 8,
+        right: 8,
       ),
       decoration: BoxDecoration(
-          //
-          ),
+        border: Border.all(
+          color: Colors.grey,
+        ),
+      ),
     );
   }
 }

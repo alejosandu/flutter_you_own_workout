@@ -6,12 +6,14 @@ class ConfigurationSectionContainer extends StatefulWidget {
   final IconData icon;
   final OnChangedFunction onChanged;
   final String defaultValue;
+  final String? isValid;
 
   ConfigurationSectionContainer({
     Key? key,
     required this.icon,
     required this.onChanged,
     this.defaultValue = '',
+    this.isValid,
   }) : super(key: key);
 
   @override
@@ -52,7 +54,10 @@ class _ConfigurationSectionContainerState
               onChanged: widget.onChanged,
               controller: _controller,
               textAlign: TextAlign.center,
+              textInputAction: TextInputAction.next,
               decoration: InputDecoration(
+                errorText: widget.isValid,
+                errorStyle: TextStyle(height: 0),
                 border: OutlineInputBorder(),
                 isDense: true,
                 contentPadding: EdgeInsets.symmetric(
@@ -83,11 +88,13 @@ class ConfigurationExerciseName extends StatefulWidget {
   final String label;
   final OnChangedFunction onChanged;
   final String? defaultValue;
+  final String? isValid;
 
   ConfigurationExerciseName({
     required this.label,
     required this.onChanged,
     this.defaultValue = '',
+    this.isValid,
   });
 
   @override
@@ -113,8 +120,10 @@ class _ConfigurationExerciseNameState extends State<ConfigurationExerciseName> {
       textAlign: TextAlign.center,
       textAlignVertical: TextAlignVertical.center,
       textCapitalization: TextCapitalization.sentences,
+      textInputAction: TextInputAction.next,
       decoration: InputDecoration(
         labelText: widget.label,
+        errorText: widget.isValid,
         border: OutlineInputBorder(),
         isDense: true,
       ),
