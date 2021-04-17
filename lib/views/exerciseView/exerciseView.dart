@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:floating_action_bubble/floating_action_bubble.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../widgets/custom_snackbar.dart';
 import '../../widgets/widgets.dart';
@@ -18,14 +18,10 @@ class ExerciseView extends StatefulWidget {
   _ExerciseViewState createState() => _ExerciseViewState();
 }
 
-class _ExerciseViewState extends State<ExerciseView>
-    with TickerProviderStateMixin {
+class _ExerciseViewState extends State<ExerciseView> {
   List<ExerciseFormData> exercises = [];
 
   final exerciseRepository = Repository<ExerciseModel>(ExerciseModel.boxName);
-
-  late Animation<double> _animation;
-  late AnimationController _animationController;
 
   void addItem() {
     setState(() {
@@ -87,15 +83,6 @@ class _ExerciseViewState extends State<ExerciseView>
 
   @override
   void initState() {
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 260),
-    );
-
-    final curvedAnimation =
-        CurvedAnimation(curve: Curves.easeInOut, parent: _animationController);
-    _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
-
     loadSaved();
 
     super.initState();
@@ -103,7 +90,7 @@ class _ExerciseViewState extends State<ExerciseView>
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: CustomAppBar(
         title: "Crear ejercicio",
@@ -128,40 +115,26 @@ class _ExerciseViewState extends State<ExerciseView>
           ),
         ),
       ),
-      floatingActionButton: FloatingActionBubble(
-        items: [
-          Bubble(
-            title: "Agregar más",
-            titleStyle: themeData.primaryTextTheme.bodyText1,
-            iconColor: themeData.buttonColor,
-            bubbleColor: themeData.accentColor,
-            icon: Icons.add,
-            onPress: () {
-              _animationController.reverse();
-              addItem();
-            },
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        backgroundColor: theme.accentColor,
+        foregroundColor: theme.buttonColor,
+        children: [
+          SpeedDialChild(
+            label: 'Guardar',
+            child: Icon(
+              Icons.save,
+            ),
+            onTap: save,
           ),
-          Bubble(
-            title: "Guardar",
-            titleStyle: themeData.primaryTextTheme.bodyText1,
-            iconColor: themeData.buttonColor,
-            bubbleColor: themeData.accentColor,
-            icon: Icons.save,
-            onPress: () {
-              _animationController.reverse();
-              save();
-            },
+          SpeedDialChild(
+            label: 'Agregar más',
+            child: Icon(
+              Icons.add,
+            ),
+            onTap: addItem,
           ),
         ],
-        animation: _animation,
-        backGroundColor: null,
-        iconColor: themeData.buttonColor,
-        iconData: Icons.menu,
-        onPress: () {
-          _animationController.isCompleted
-              ? _animationController.reverse()
-              : _animationController.forward();
-        },
       ),
     );
   }

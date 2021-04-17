@@ -33,7 +33,7 @@ dependencies:
   hive: 2.0.2
   hive_flutter: 1.0.0
   uuid: 3.0.4
-  floating_action_bubble: 1.1.2
+  flutter_speed_dial: 3.0.5
 
 dev_dependencies:
   flutter_test:
