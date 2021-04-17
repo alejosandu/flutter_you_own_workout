@@ -5,12 +5,22 @@ import 'database/database.dart';
 
 void main() async {
   await Database.init();
-  runApp(MyApp());
+  runApp(AppKeepStateWrapper());
 }
 
-class MyApp extends StatelessWidget {
+class AppKeepStateWrapper extends StatefulWidget {
+  @override
+  _AppKeepStateWrapperState createState() => _AppKeepStateWrapperState();
+}
+
+class _AppKeepStateWrapperState extends State<AppKeepStateWrapper>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return MaterialApp(
       title: 'Your own workout',
       theme: appTheme,
