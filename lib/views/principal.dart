@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../widgets/appbar.dart';
-import 'exerciseView/exerciseView.dart';
+import 'views.dart';
 
 class PrincipalPage extends StatelessWidget {
   static String get routeName => '/';
@@ -33,7 +33,7 @@ class PrincipalPage extends StatelessWidget {
             label: 'Configurar entrenamientos',
             onTap: () {
               try {
-                Navigator.of(context).pushNamed(ExerciseView.routeName);
+                Navigator.of(context).pushNamed(WorkoutView.routeName);
               } catch (e) {
                 debugPrint(e.toString());
               }
