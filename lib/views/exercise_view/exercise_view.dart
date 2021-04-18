@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:yourownworkout/widgets/custom_fab.dart';
 
-import '../../widgets/custom_snackbar.dart';
 import '../../widgets/widgets.dart';
 import '../../errors/errors.dart';
 import '../../database/repository.dart';
@@ -58,7 +56,7 @@ class _ExerciseViewState extends State<ExerciseView> {
     });
   }
 
-  loadSaved() async {
+  init() async {
     try {
       await exerciseRepository.isReady;
       final exercisesFormData = exerciseRepository.values
@@ -83,7 +81,7 @@ class _ExerciseViewState extends State<ExerciseView> {
 
   @override
   void initState() {
-    loadSaved();
+    init();
 
     super.initState();
   }

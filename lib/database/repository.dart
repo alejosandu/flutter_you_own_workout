@@ -36,4 +36,8 @@ class Repository<T extends BoxModel> {
   Iterable<T> get values {
     return _box.values;
   }
+
+  T? get(T model) {
+    return _box.get(model.id);
+  }
 }

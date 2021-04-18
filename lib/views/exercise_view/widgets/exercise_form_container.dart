@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../extensions/num_extensions.dart';
 
+import '../../../widgets/widgets.dart';
 import 'aditional_configuration_container.dart';
 import 'configuration_section_container.dart';
 import 'exercise_form_data.dart';
@@ -27,7 +28,7 @@ class _ExerciseFormContainerState extends State<ExerciseFormContainer> {
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
-            child: ConfigurationExerciseName(
+            child: NameTextField(
               label: "Nombre del ejercicio",
               onChanged: widget.formData.setExerciseName,
               defaultValue: widget.formData.exerciseName,

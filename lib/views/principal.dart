@@ -23,7 +23,7 @@ class PrincipalPage extends StatelessWidget {
           ),
           FabAction(
             child: Icon(Icons.sports),
-            label: 'Configurar entrenamientos',
+            label: 'Configurar entrenamiento',
             onTap: () {
               Navigator.of(context).pushNamed(WorkoutView.routeName);
             },
