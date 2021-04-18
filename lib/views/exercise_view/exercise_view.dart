@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:yourownworkout/widgets/custom_fab.dart';
 
 import '../../widgets/custom_snackbar.dart';
 import '../../widgets/widgets.dart';
@@ -90,7 +90,6 @@ class _ExerciseViewState extends State<ExerciseView> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: CustomAppBar(
         title: "Crear ejercicio",
@@ -115,19 +114,17 @@ class _ExerciseViewState extends State<ExerciseView> {
           ),
         ),
       ),
-      floatingActionButton: SpeedDial(
-        animatedIcon: AnimatedIcons.menu_close,
-        backgroundColor: theme.accentColor,
-        foregroundColor: theme.buttonColor,
+      floatingActionButton: CustomFab(
+        icon: AnimatedIcons.menu_close,
         children: [
-          SpeedDialChild(
+          FabAction(
             label: 'Guardar',
             child: Icon(
               Icons.save,
             ),
             onTap: save,
           ),
-          SpeedDialChild(
+          FabAction(
             label: 'Agregar más',
             child: Icon(
               Icons.add,
