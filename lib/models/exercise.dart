@@ -43,6 +43,23 @@ class ExerciseModel implements BoxModel {
   late DateTime _createdAt;
   DateTime get createdAt => _createdAt;
 
+  /// duration calculation on milliseconds
+  Duration get duration {
+    return exerciseDuration + breakTimeDuration;
+  }
+
+  /// duration calculation on milliseconds
+  Duration get exerciseDuration {
+    final duration = ((count * intervalCount) * series) * 1000;
+    return Duration(milliseconds: duration.toInt());
+  }
+
+  /// duration calculation on milliseconds
+  Duration get breakTimeDuration {
+    final duration = (breakDuration * series) * 1000;
+    return Duration(milliseconds: duration.toInt());
+  }
+
   @override
   String toString() => "$_id: $exerciseName";
 
