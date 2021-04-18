@@ -19,7 +19,7 @@ class WorkoutModel implements BoxModel {
 
   /// list of all the exercises that make part of the entire workout
   @HiveField(2)
-  List<ExerciseModel> exercises;
+  List<ExerciseModel> exercises = [];
 
   /// get the total duration within all exercises and break times on milliseconds
   Duration get duration {
@@ -47,9 +47,10 @@ class WorkoutModel implements BoxModel {
   WorkoutModel({
     String? id,
     this.workoutName = '',
-    this.exercises = const [],
+    List<ExerciseModel>? exercises,
   }) {
     final uuid = Uuid();
     _id = id ?? uuid.v4();
+    this.exercises = exercises ?? [];
   }
 }

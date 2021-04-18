@@ -18,7 +18,7 @@ class WorkoutAdapter extends TypeAdapter<WorkoutModel> {
     };
     return WorkoutModel(
       workoutName: fields[1] as String,
-      exercises: (fields[2] as List).cast<ExerciseModel>(),
+      exercises: (fields[2] as List?)?.cast<ExerciseModel>(),
     ).._id = fields[0] as String;
   }
 
