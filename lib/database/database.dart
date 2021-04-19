@@ -18,8 +18,4 @@ class Database {
     Hive.registerAdapter(WorkoutAdapter());
     _instance = Database._();
   }
-
-  Future<Box<T>> open<T>(String boxName) {
-    return Hive.openBox<T>(boxName);
-  }
 }

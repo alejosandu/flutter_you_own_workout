@@ -16,11 +16,11 @@ class ExerciseFormData extends ExerciseModel {
     DateTime? createdAt,
   }) : super(
           id: id,
-          exerciseName: exerciseName as String,
-          count: count as int,
-          intervalCount: intervalCount as double,
-          breakDuration: breakDuration as double,
-          series: series as int,
+          exerciseName: exerciseName ?? '',
+          count: count ?? 0,
+          intervalCount: intervalCount ?? 0,
+          breakDuration: breakDuration ?? 0,
+          series: series ?? 0,
           addedWeight: addedWeight,
           createdAt: createdAt,
         );

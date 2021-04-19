@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../helpers/logger.dart';
 
 import '../../widgets/widgets.dart';
 import '../../errors/errors.dart';
@@ -45,6 +46,7 @@ class _ExerciseViewState extends State<ExerciseView> {
       CustomSnackBar(context, text: e.message);
     } catch (e) {
       CustomSnackBar(context, text: "Ocurrió un error al guardar");
+      Logger.logError(e);
       debugPrint(e.toString());
     }
   }
@@ -75,6 +77,7 @@ class _ExerciseViewState extends State<ExerciseView> {
       });
     } catch (e) {
       CustomSnackBar(context, text: "Ocurrió un error cargando los datos");
+      Logger.logError(e);
       debugPrint(e.toString());
     }
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../helpers/logger.dart';
 import '../../errors/app_error.dart';
 import '../../models/workout.dart';
 import '../../models/exercise.dart';
@@ -48,6 +49,7 @@ class _WorkoutViewState extends State<WorkoutView> {
       CustomSnackBar(context, text: e.message);
     } catch (e) {
       CustomSnackBar(context, text: "Ocurrió un error al guardar");
+      Logger.logError(e);
       debugPrint(e.toString());
     }
   }
@@ -62,6 +64,7 @@ class _WorkoutViewState extends State<WorkoutView> {
       }
     } catch (e) {
       CustomSnackBar(context, text: "Ocurrió un error al cargar los datos");
+      Logger.logError(e);
       debugPrint(e.toString());
     }
   }
@@ -138,8 +141,9 @@ class __ExerciseSelectorState extends State<_ExerciseSelector> {
 
       setState(() {});
     } catch (e) {
-      debugPrint(e.toString());
       CustomSnackBar(context, text: "Ocurrió un error listando los ejercicios");
+      Logger.logError(e);
+      debugPrint(e.toString());
     }
   }
 
