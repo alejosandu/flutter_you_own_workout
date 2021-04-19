@@ -78,8 +78,8 @@ class ExerciseFormData extends ExerciseModel {
   setSeries(String value) => series = int.tryParse(value) as int;
   String? get seriesIsValid {
     return Validator([
-      Rule(() => breakDuration.toStringEmpty.isEmpty, ""),
-      Rule(() => breakDuration <= 0, ""),
+      Rule(() => series.toStringEmpty.isEmpty, ""),
+      Rule(() => series <= 0, ""),
     ]).test();
   }
 
