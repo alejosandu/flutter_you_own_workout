@@ -157,17 +157,22 @@ class __ExerciseSelectorState extends State<_ExerciseSelector> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: "Seleccione ejercicios"),
-      body: ListView.builder(
-        itemCount: exercises.length,
-        itemBuilder: (_, index) {
-          return CheckboxListTile(
-            title: Text(exercises[index].exerciseName),
-            subtitle: _Card(exercises[index]),
-            value: true,
-            onChanged: (value) {},
-            controlAffinity: ListTileControlAffinity.leading,
-          );
-        },
+      body: SingleChildScrollView(
+        child: ExpansionPanelList.radio(
+          elevation: 1,
+          expandedHeaderPadding: const EdgeInsets.all(0),
+          children: exercises.map<ExpansionPanelRadio>((exercise) {
+            return ExpansionPanelRadio(
+              value: exercise,
+              headerBuilder: (context, isExpanded) {
+                return ListTile(
+                  title: Text(exercise.exerciseName),
+                );
+              },
+              body: _Card(exercise),
+            );
+          }).toList(),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.playlist_add),
@@ -183,64 +188,74 @@ class _Card extends StatelessWidget {
   _Card(this.exercise);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 70,
-      child: GridView.count(
-        crossAxisCount: 2,
-        childAspectRatio: 18 / 2,
-        physics: ScrollPhysics(),
-        children: [
-          _Details(
-            label: " repeticiones",
-            value: exercise.count.toString(),
-          ),
-          _Details(
-            label: "s para cada aumento",
-            value: exercise.intervalCount.toString(),
-          ),
-          _Details(
-            label: " de reposo/serie",
-            value: exercise.breakDuration.toDuration.formatedDurationShort,
-          ),
-          _Details(
-            label: " series",
-            value: exercise.series.toString(),
-          ),
-          _Details(
-            label: " de ejercicio",
-            value: exercise.exerciseDuration.formatedDurationShort,
-          ),
-          _Details(
-            label: " de reposo",
-            value: exercise.breakTimeDuration.formatedDurationShort,
-          ),
-          _Details(
-            label: " en total",
-            value: exercise.duration.formatedDurationShort,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Details extends StatelessWidget {
-  final String label;
-  final String value;
-
-  _Details({
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
       children: [
-        Text(this.value),
-        Text(this.label),
+        ConstrainedBox(
+          constraints: BoxConstraints.expand(
+            height: 120,
+          ),
+          child: Row(
+            children: [
+              Flexible(
+                flex: 1,
+                child: Table(
+                  children: [
+                    TableRow(
+                      children: [
+                        Icon(Icons.arrow_circle_up),
+                        Text(exercise.count.toString()),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        Icon(Icons.update),
+                        Text(exercise.intervalCount.toString()),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        Icon(Icons.hourglass_empty),
+                        Text(exercise
+                            .breakDuration.toDuration.formatedDurationShort),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        Icon(Icons.repeat),
+                        Text(exercise.series.toString()),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Table(
+                  children: [
+                    TableRow(
+                      children: [
+                        Icon(Icons.timer),
+                        Text(exercise.exerciseDuration.formatedDurationShort),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        Icon(Icons.timer_off),
+                        Text(exercise.breakTimeDuration.formatedDurationShort),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        Icon(Icons.pending_actions),
+                        Text(exercise.duration.formatedDurationShort),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

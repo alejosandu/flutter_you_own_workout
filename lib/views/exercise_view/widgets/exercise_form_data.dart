@@ -49,7 +49,7 @@ class ExerciseFormData extends ExerciseModel {
     ]).test();
   }
 
-  setCount(String value) => count = int.tryParse(value) as int;
+  setCount(String value) => count = int.tryParse(value) ?? 0;
   String? get countIsValid {
     return Validator([
       Rule(() => count.toStringEmpty.isEmpty, ""),
@@ -57,8 +57,7 @@ class ExerciseFormData extends ExerciseModel {
     ]).test();
   }
 
-  setIntervalCount(String value) =>
-      intervalCount = double.tryParse(value) as double;
+  setIntervalCount(String value) => intervalCount = double.tryParse(value) ?? 0;
   String? get intervalCountIsValid {
     return Validator([
       Rule(() => intervalCount.toStringEmpty.isEmpty, ""),
@@ -66,8 +65,7 @@ class ExerciseFormData extends ExerciseModel {
     ]).test();
   }
 
-  setBreakDuration(String value) =>
-      breakDuration = double.tryParse(value) as double;
+  setBreakDuration(String value) => breakDuration = double.tryParse(value) ?? 0;
   String? get breakDurationIsValid {
     return Validator([
       Rule(() => breakDuration.toStringEmpty.isEmpty, ""),
@@ -75,7 +73,7 @@ class ExerciseFormData extends ExerciseModel {
     ]).test();
   }
 
-  setSeries(String value) => series = int.tryParse(value) as int;
+  setSeries(String value) => series = int.tryParse(value) ?? 0;
   String? get seriesIsValid {
     return Validator([
       Rule(() => series.toStringEmpty.isEmpty, ""),
@@ -83,7 +81,7 @@ class ExerciseFormData extends ExerciseModel {
     ]).test();
   }
 
-  setWeight(String value) => addedWeight = double.tryParse(value) as double;
+  setWeight(String value) => addedWeight = double.tryParse(value) ?? 0;
 
   bool get validateFields {
     final result = [
