@@ -162,14 +162,15 @@ class __ExerciseSelectorState extends State<_ExerciseSelector> {
           elevation: 1,
           expandedHeaderPadding: const EdgeInsets.all(0),
           children: exercises.map<ExpansionPanelRadio>((exercise) {
-            return ExpansionPanelRadio(
-              value: exercise,
-              headerBuilder: (context, isExpanded) {
-                return ListTile(
-                  title: Text(exercise.exerciseName),
-                );
+            return _Card(
+              exercise: exercise,
+              onTap: () {
+                if (selectedExercises.any((element) => element == exercise)) {
+                  selectedExercises.remove(exercise);
+                } else {
+                  selectedExercises.add(exercise);
+                }
               },
-              body: _Card(exercise),
             );
           }).toList(),
         ),
@@ -182,10 +183,74 @@ class __ExerciseSelectorState extends State<_ExerciseSelector> {
   }
 }
 
-class _Card extends StatelessWidget {
+class _Card extends StatefulWidget implements ExpansionPanelRadio {
+  final ExerciseModel exercise;
+  late final __CardState state;
+  final Function()? onTap;
+  _Card({
+    required this.exercise,
+    this.onTap,
+  }) {
+    final expansionPanelRadio = ExpansionPanelRadio(
+      value: exercise,
+      headerBuilder: (context, isExpanded) {
+        return GestureDetector(
+          onTap: onTap,
+          child: ListTile(
+            title: Text(exercise.exerciseName),
+          ),
+        );
+      },
+      body: GestureDetector(
+        child: _Content(exercise),
+        onTap: onTap,
+      ),
+    );
+
+    state = __CardState(expansionPanelRadio: expansionPanelRadio);
+  }
+
+  @override
+  __CardState createState() => state;
+
+  @override
+  Color? get backgroundColor => state._expansionPanelRadio.backgroundColor;
+
+  @override
+  Widget get body => state._expansionPanelRadio.body;
+
+  @override
+  bool get canTapOnHeader => state._expansionPanelRadio.canTapOnHeader;
+
+  @override
+  get headerBuilder => state._expansionPanelRadio.headerBuilder;
+
+  @override
+  bool get isExpanded => state._expansionPanelRadio.isExpanded;
+
+  @override
+  Object get value => state._expansionPanelRadio.value;
+}
+
+class __CardState extends State<_Card> {
+  late ExpansionPanelRadio _expansionPanelRadio;
+
+  __CardState({
+    required ExpansionPanelRadio expansionPanelRadio,
+  }) {
+    this._expansionPanelRadio = expansionPanelRadio;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class _Content extends StatelessWidget {
   final ExerciseModel exercise;
 
-  _Card(this.exercise);
+  _Content(this.exercise);
   @override
   Widget build(BuildContext context) {
     return Column(
