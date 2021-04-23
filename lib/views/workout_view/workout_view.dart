@@ -30,14 +30,23 @@ class _WorkoutViewState extends State<WorkoutView> {
       ),
     );
     if (exercises != null) {
-      setState(() {
-        workout.exercises.addAll(exercises);
+      exercises.forEach((a) {
+        if (!workout.exercises.any((b) => b == a)) workout.exercises.add(a);
       });
+
+      setState(() {});
     }
+  }
+
+  removeExercise(dynamic object) {
+    setState(() {
+      workout.exercises.remove(object);
+    });
   }
 
   validateAll() {
     if (workout.validateFields) {
+      setState(() {});
       throw AppError(message: "Algunos campos tienen errores");
     }
   }
@@ -79,26 +88,28 @@ class _WorkoutViewState extends State<WorkoutView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: "Entrenamiento"),
-      body: Container(
-        child: Column(
-          children: [
-            NameTextField(
-              label: "Nombre del entrenamiento",
-              onChanged: workout.setWorkoutName,
-              defaultValue: workout.workoutName,
-              isValid: workout.workoutNameIsValid,
+      body: Column(
+        children: [
+          NameTextField(
+            label: "Nombre del entrenamiento",
+            onChanged: workout.setWorkoutName,
+            defaultValue: workout.workoutName,
+            isValid: workout.workoutNameIsValid,
+          ),
+          Container(
+            child: Column(
+              children: [
+                Text(workout.exercisesDuration.formatedDuration),
+                Text(workout.breakTimeDuration.formatedDuration),
+                Text(workout.duration.formatedDuration),
+              ],
             ),
-            Container(
-              child: Column(
-                children: [
-                  Text(workout.exercisesDuration.formatedDuration),
-                  Text(workout.breakTimeDuration.formatedDuration),
-                  Text(workout.duration.formatedDuration),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+          _ExercisesList(
+            exercises: workout.exercises,
+            remove: removeExercise,
+          ),
+        ],
       ),
       floatingActionButton: CustomFab(
         icon: AnimatedIcons.menu_close,
@@ -114,6 +125,36 @@ class _WorkoutViewState extends State<WorkoutView> {
             onTap: addExercise,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ExercisesList extends StatelessWidget {
+  final List<ExerciseModel> exercises;
+  final Function(dynamic) remove;
+
+  _ExercisesList({
+    required this.exercises,
+    required this.remove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return Flexible(
+      child: ListView.builder(
+        itemCount: exercises.length,
+        itemBuilder: (context, index) {
+          return DismissibleContainer(
+            child: _Card(
+              exercise: exercises[index],
+              theme: theme,
+            ),
+            onDismissed: remove,
+            index: exercises[index],
+          );
+        },
       ),
     );
   }
@@ -155,6 +196,7 @@ class __ExerciseSelectorState extends State<_ExerciseSelector> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: CustomAppBar(title: "Seleccione ejercicios"),
       body: SingleChildScrollView(
@@ -164,12 +206,16 @@ class __ExerciseSelectorState extends State<_ExerciseSelector> {
           children: exercises.map<ExpansionPanelRadio>((exercise) {
             return _Card(
               exercise: exercise,
+              selected: selectedExercises.any((element) => element == exercise),
+              theme: theme,
               onTap: () {
-                if (selectedExercises.any((element) => element == exercise)) {
-                  selectedExercises.remove(exercise);
-                } else {
-                  selectedExercises.add(exercise);
-                }
+                setState(() {
+                  if (selectedExercises.any((element) => element == exercise)) {
+                    selectedExercises.remove(exercise);
+                  } else {
+                    selectedExercises.add(exercise);
+                  }
+                });
               },
             );
           }).toList(),
@@ -183,67 +229,88 @@ class __ExerciseSelectorState extends State<_ExerciseSelector> {
   }
 }
 
-class _Card extends StatefulWidget implements ExpansionPanelRadio {
+class _Card extends StatelessWidget implements ExpansionPanelRadio {
   final ExerciseModel exercise;
-  late final __CardState state;
   final Function()? onTap;
+  final bool selected;
+  final ThemeData theme;
+  late final _expansionPanelRadio;
+  late final Widget _header;
+  late final Widget _body;
   _Card({
     required this.exercise,
     this.onTap,
+    this.selected = false,
+    required this.theme,
   }) {
-    final expansionPanelRadio = ExpansionPanelRadio(
-      value: exercise,
-      headerBuilder: (context, isExpanded) {
-        return GestureDetector(
-          onTap: onTap,
-          child: ListTile(
-            title: Text(exercise.exerciseName),
-          ),
-        );
-      },
-      body: GestureDetector(
-        child: _Content(exercise),
-        onTap: onTap,
+    this._header = InkWell(
+      onTap: onTap,
+      child: ListTile(
+        title: Row(
+          children: [
+            Text(exercise.exerciseName),
+            Text(" | "),
+            Icon(Icons.pending_actions),
+            Text(" "),
+            Text(exercise.duration.formatedDuration),
+          ],
+        ),
       ),
     );
 
-    state = __CardState(expansionPanelRadio: expansionPanelRadio);
+    this._body = InkWell(
+      child: _Content(exercise),
+      onTap: onTap,
+    );
+
+    this._expansionPanelRadio = ExpansionPanelRadio(
+      backgroundColor: selected ? theme.buttonColor : null,
+      value: exercise,
+      headerBuilder: (context, isExpanded) {
+        return _header;
+      },
+      body: _body,
+    );
   }
 
   @override
-  __CardState createState() => state;
+  Color? get backgroundColor => _expansionPanelRadio.backgroundColor;
 
   @override
-  Color? get backgroundColor => state._expansionPanelRadio.backgroundColor;
+  Widget get body => _expansionPanelRadio.body;
 
   @override
-  Widget get body => state._expansionPanelRadio.body;
+  bool get canTapOnHeader => _expansionPanelRadio.canTapOnHeader;
 
   @override
-  bool get canTapOnHeader => state._expansionPanelRadio.canTapOnHeader;
+  get headerBuilder => _expansionPanelRadio.headerBuilder;
 
   @override
-  get headerBuilder => state._expansionPanelRadio.headerBuilder;
+  bool get isExpanded => _expansionPanelRadio.isExpanded;
 
   @override
-  bool get isExpanded => state._expansionPanelRadio.isExpanded;
-
-  @override
-  Object get value => state._expansionPanelRadio.value;
-}
-
-class __CardState extends State<_Card> {
-  late ExpansionPanelRadio _expansionPanelRadio;
-
-  __CardState({
-    required ExpansionPanelRadio expansionPanelRadio,
-  }) {
-    this._expansionPanelRadio = expansionPanelRadio;
-  }
+  Object get value => _expansionPanelRadio.value;
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return ExpansionPanelList.radio(
+      elevation: 1,
+      children: [_expansionPanelRadio],
+    );
+    // return Container(
+    //   height: 180,
+    //   child: Column(
+    //     children: [
+    //       _header,
+    //       _body,
+    //     ],
+    //   ),
+    //   decoration: BoxDecoration(
+    //     border: Border.all(
+    //       color: Colors.grey,
+    //     ),
+    //   ),
+    // );
   }
 }
 
@@ -280,8 +347,8 @@ class _Content extends StatelessWidget {
                     TableRow(
                       children: [
                         Icon(Icons.hourglass_empty),
-                        Text(exercise
-                            .breakDuration.toDuration.formatedDurationShort),
+                        Text(
+                            exercise.breakDuration.toDuration.formatedDuration),
                       ],
                     ),
                     TableRow(
@@ -300,19 +367,19 @@ class _Content extends StatelessWidget {
                     TableRow(
                       children: [
                         Icon(Icons.timer),
-                        Text(exercise.exerciseDuration.formatedDurationShort),
+                        Text(exercise.exerciseDuration.formatedDuration),
                       ],
                     ),
                     TableRow(
                       children: [
                         Icon(Icons.timer_off),
-                        Text(exercise.breakTimeDuration.formatedDurationShort),
+                        Text(exercise.breakTimeDuration.formatedDuration),
                       ],
                     ),
                     TableRow(
                       children: [
                         Icon(Icons.pending_actions),
-                        Text(exercise.duration.formatedDurationShort),
+                        Text(exercise.duration.formatedDuration),
                       ],
                     ),
                   ],

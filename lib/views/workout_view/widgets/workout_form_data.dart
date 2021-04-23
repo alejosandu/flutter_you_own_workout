@@ -11,6 +11,12 @@ class WorkoutFormData extends WorkoutModel {
     ]).test();
   }
 
+  String? get workoutExercisesAreValid {
+    return Validator([
+      Rule(() => exercises.isEmpty, "Debe haber al menos un ejercicio"),
+    ]).test();
+  }
+
   static fromWorkoutModel(WorkoutModel model) {
     final workoutFormData = WorkoutFormData();
     return workoutFormData;
@@ -19,6 +25,7 @@ class WorkoutFormData extends WorkoutModel {
   bool get validateFields {
     return [
       workoutNameIsValid,
+      workoutExercisesAreValid,
     ].any((v) => v != null);
   }
 }

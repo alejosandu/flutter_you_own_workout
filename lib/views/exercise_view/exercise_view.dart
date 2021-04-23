@@ -6,7 +6,6 @@ import '../../errors/errors.dart';
 import '../../database/repository.dart';
 import '../../models/exercise.dart';
 
-import 'widgets/dismissible_container.dart';
 import 'widgets/exercise_form_container.dart';
 import 'widgets/exercise_form_data.dart';
 
@@ -85,7 +84,6 @@ class _ExerciseViewState extends State<ExerciseView> {
   @override
   void initState() {
     init();
-
     super.initState();
   }
 
