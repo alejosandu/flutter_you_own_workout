@@ -40,4 +40,6 @@ class Repository<T extends BoxModel> {
   T? get(T model) {
     return _box.get(model.id);
   }
+
+  bool get isEmpty => _box.isEmpty;
 }

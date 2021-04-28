@@ -18,7 +18,7 @@ class ExerciseAdapter extends TypeAdapter<ExerciseModel> {
     };
     return ExerciseModel(
       exerciseName: fields[1] as String,
-      description: fields[2] as String,
+      description: fields[2] as String?,
       count: fields[3] as int,
       intervalCount: fields[4] as double,
       breakDuration: fields[5] as double,

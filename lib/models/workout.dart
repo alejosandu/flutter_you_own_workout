@@ -17,6 +17,7 @@ class WorkoutModel implements BoxModel {
   @HiveField(1)
   String workoutName;
 
+  /// description of the overall wokrout
   @HiveField(2)
   String? description;
 

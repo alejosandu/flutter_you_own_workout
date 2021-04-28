@@ -5,6 +5,7 @@ import 'database/database.dart';
 
 void main() async {
   await Database.init();
+  await Database.initDatabase();
   runApp(AppKeepStateWrapper());
 }
 

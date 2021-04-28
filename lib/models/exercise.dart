@@ -18,8 +18,9 @@ class ExerciseModel implements BoxModel {
   @HiveField(1)
   String exerciseName;
 
+  /// Description for the exercise
   @HiveField(2)
-  String description;
+  String? description;
 
   /// Amount of repetitions to do for this exercise
   @HiveField(3)
@@ -69,7 +70,7 @@ class ExerciseModel implements BoxModel {
   ExerciseModel({
     String? id,
     this.exerciseName = '',
-    this.description = '',
+    this.description,
     this.count = 0,
     this.intervalCount = 0,
     this.breakDuration = 0,
