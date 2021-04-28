@@ -24,6 +24,11 @@ class WorkoutModel implements BoxModel {
   @HiveField(3)
   List<ExerciseModel> exercises = [];
 
+  // date when the object was created
+  @HiveField(4)
+  late DateTime _createdAt;
+  DateTime get createdAt => _createdAt;
+
   /// get the total duration within all exercises and break times on milliseconds
   Duration get duration {
     return exercisesDuration + breakTimeDuration;
@@ -52,9 +57,11 @@ class WorkoutModel implements BoxModel {
     this.workoutName = '',
     this.description,
     List<ExerciseModel>? exercises,
+    DateTime? createdAt,
   }) {
     final uuid = Uuid();
     _id = id ?? uuid.v4();
     this.exercises = exercises ?? [];
+    this._createdAt = createdAt ?? DateTime.now();
   }
 }

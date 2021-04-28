@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../helpers/logger.dart';
 import '../../errors/app_error.dart';
-import '../../models/workout.dart';
-import '../../models/exercise.dart';
+import '../../models/models.dart';
 import '../../database/repository.dart';
 import '../../extensions/duration_extensions.dart';
 import '../../extensions/num_extensions.dart';
@@ -51,9 +50,11 @@ class _WorkoutViewState extends State<WorkoutView> {
     }
   }
 
-  save() {
+  save() async {
     try {
       validateAll();
+      workoutRepository.put(workout);
+      Navigator.pop(context);
     } on AppError catch (e) {
       CustomSnackBar(context, text: e.message);
     } catch (e) {
