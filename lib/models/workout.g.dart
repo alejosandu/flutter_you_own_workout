@@ -18,19 +18,22 @@ class WorkoutAdapter extends TypeAdapter<WorkoutModel> {
     };
     return WorkoutModel(
       workoutName: fields[1] as String,
-      exercises: (fields[2] as List?)?.cast<ExerciseModel>(),
+      description: fields[2] as String?,
+      exercises: (fields[3] as List?)?.cast<ExerciseModel>(),
     ).._id = fields[0] as String;
   }
 
   @override
   void write(BinaryWriter writer, WorkoutModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj._id)
       ..writeByte(1)
       ..write(obj.workoutName)
       ..writeByte(2)
+      ..write(obj.description)
+      ..writeByte(3)
       ..write(obj.exercises);
   }
 

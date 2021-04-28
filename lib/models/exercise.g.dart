@@ -18,35 +18,38 @@ class ExerciseAdapter extends TypeAdapter<ExerciseModel> {
     };
     return ExerciseModel(
       exerciseName: fields[1] as String,
-      count: fields[2] as int,
-      intervalCount: fields[3] as double,
-      breakDuration: fields[4] as double,
-      series: fields[5] as int,
-      addedWeight: fields[6] as double?,
+      description: fields[2] as String,
+      count: fields[3] as int,
+      intervalCount: fields[4] as double,
+      breakDuration: fields[5] as double,
+      series: fields[6] as int,
+      addedWeight: fields[7] as double?,
     )
       .._id = fields[0] as String
-      .._createdAt = fields[7] as DateTime;
+      .._createdAt = fields[8] as DateTime;
   }
 
   @override
   void write(BinaryWriter writer, ExerciseModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj._id)
       ..writeByte(1)
       ..write(obj.exerciseName)
       ..writeByte(2)
-      ..write(obj.count)
+      ..write(obj.description)
       ..writeByte(3)
-      ..write(obj.intervalCount)
+      ..write(obj.count)
       ..writeByte(4)
-      ..write(obj.breakDuration)
+      ..write(obj.intervalCount)
       ..writeByte(5)
-      ..write(obj.series)
+      ..write(obj.breakDuration)
       ..writeByte(6)
-      ..write(obj.addedWeight)
+      ..write(obj.series)
       ..writeByte(7)
+      ..write(obj.addedWeight)
+      ..writeByte(8)
       ..write(obj._createdAt);
   }
 

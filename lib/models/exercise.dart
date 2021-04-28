@@ -18,28 +18,31 @@ class ExerciseModel implements BoxModel {
   @HiveField(1)
   String exerciseName;
 
-  /// Amount of repetitions to do for this exercise
   @HiveField(2)
+  String description;
+
+  /// Amount of repetitions to do for this exercise
+  @HiveField(3)
   int count;
 
   /// The time to wait to add 1 to the `count`
-  @HiveField(3)
+  @HiveField(4)
   double intervalCount;
 
   /// time to  wait until the next `serie`
-  @HiveField(4)
+  @HiveField(5)
   double breakDuration;
 
   /// the amount of series to repeat
-  @HiveField(5)
+  @HiveField(6)
   int series;
 
   /// (optional) weight added to this exercise
-  @HiveField(6)
+  @HiveField(7)
   double? addedWeight;
 
   // date when the object was created
-  @HiveField(7)
+  @HiveField(8)
   late DateTime _createdAt;
   DateTime get createdAt => _createdAt;
 
@@ -66,6 +69,7 @@ class ExerciseModel implements BoxModel {
   ExerciseModel({
     String? id,
     this.exerciseName = '',
+    this.description = '',
     this.count = 0,
     this.intervalCount = 0,
     this.breakDuration = 0,

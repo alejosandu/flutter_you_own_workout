@@ -17,8 +17,11 @@ class WorkoutModel implements BoxModel {
   @HiveField(1)
   String workoutName;
 
-  /// list of all the exercises that make part of the entire workout
   @HiveField(2)
+  String? description;
+
+  /// list of all the exercises that make part of the entire workout
+  @HiveField(3)
   List<ExerciseModel> exercises = [];
 
   /// get the total duration within all exercises and break times on milliseconds
@@ -47,6 +50,7 @@ class WorkoutModel implements BoxModel {
   WorkoutModel({
     String? id,
     this.workoutName = '',
+    this.description,
     List<ExerciseModel>? exercises,
   }) {
     final uuid = Uuid();
