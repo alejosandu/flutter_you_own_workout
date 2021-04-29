@@ -23,9 +23,9 @@ class _NameTextFieldState extends State<NameTextField> {
   final TextEditingController _controller = TextEditingController();
 
   @override
-  void initState() {
+  void didUpdateWidget(covariant NameTextField oldWidget) {
     _controller.text = widget.defaultValue as String;
-    super.initState();
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

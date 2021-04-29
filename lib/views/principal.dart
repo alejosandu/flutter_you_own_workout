@@ -3,6 +3,7 @@ import 'package:yourownworkout/helpers/logger.dart';
 import '../widgets/widgets.dart';
 import '../database/repository.dart';
 import '../models/models.dart';
+import '../extensions/duration_extensions.dart';
 import 'views.dart';
 
 class PrincipalPage extends StatefulWidget {
@@ -16,12 +17,20 @@ class _PrincipalPageState extends State<PrincipalPage> {
   final workoutRepository = Repository<WorkoutModel>(WorkoutModel.boxName);
   List<WorkoutModel> workouts = [];
 
+  getAllWorkouts() {
+    setState(() {
+      workouts = [];
+      workouts.addAll(
+        workoutRepository.values.toList()
+          ..sort((a, b) => a.createdAt.compareTo(b.createdAt)),
+      );
+    });
+  }
+
   init() async {
     try {
       await workoutRepository.isReady;
-      setState(() {
-        workouts.addAll(workoutRepository.values);
-      });
+      getAllWorkouts();
     } catch (e) {
       CustomSnackBar(context,
           text: "Ocurrió un error cargando los entrenamientos");
@@ -43,7 +52,10 @@ class _PrincipalPageState extends State<PrincipalPage> {
       body: ListView.builder(
         itemCount: workouts.length,
         itemBuilder: (context, index) {
-          return Text(workouts[index].workoutName);
+          return _WorkoutCard(
+            workouts[index],
+            update: getAllWorkouts,
+          );
         },
       ),
       floatingActionButton: CustomFab(
@@ -61,16 +73,44 @@ class _PrincipalPageState extends State<PrincipalPage> {
             label: 'Configurar entrenamiento',
             onTap: () async {
               await Navigator.of(context).pushNamed(WorkoutView.routeName);
-              setState(() {
-                workouts = [];
-                workouts.addAll(
-                  workoutRepository.values.toList()
-                    ..sort((a, b) => a.createdAt.compareTo(b.createdAt)),
-                );
-              });
+              getAllWorkouts();
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _WorkoutCard extends StatelessWidget {
+  final WorkoutModel workout;
+  final Function() update;
+
+  _WorkoutCard(this.workout, {required this.update});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () async {
+          await Navigator.pushNamed(
+            context,
+            WorkoutView.routeName,
+            arguments: workout,
+          );
+          update();
+        },
+        child: Column(
+          children: [
+            Text(workout.workoutName),
+            Text(workout.description ?? ''),
+            Text(workout.exercises.length.toString()),
+            Text(workout.exercisesDuration.formatedDuration),
+            Text(workout.breakTimeDuration.formatedDuration),
+            Text(workout.duration.formatedDuration),
+          ],
+        ),
       ),
     );
   }

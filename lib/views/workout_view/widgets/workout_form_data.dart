@@ -1,9 +1,21 @@
-import 'package:yourownworkout/helpers/validator.dart';
-import 'package:yourownworkout/models/workout.dart';
-
-// import '../../../models/models.dart';
+import '../../../helpers/validator.dart';
+import '../../../models/models.dart';
 
 class WorkoutFormData extends WorkoutModel {
+  WorkoutFormData({
+    String? id,
+    String workoutName = '',
+    String? description,
+    List<ExerciseModel>? exercises,
+    DateTime? createdAt,
+  }) : super(
+          id: id,
+          workoutName: workoutName,
+          description: description,
+          exercises: exercises,
+          createdAt: createdAt,
+        );
+
   setWorkoutName(String value) => workoutName = value;
   String? get workoutNameIsValid {
     return Validator([
@@ -17,8 +29,15 @@ class WorkoutFormData extends WorkoutModel {
     ]).test();
   }
 
-  static fromWorkoutModel(WorkoutModel model) {
-    final workoutFormData = WorkoutFormData();
+  static fromWorkoutModel(WorkoutModel workout) {
+    final workoutFormData = WorkoutFormData(
+      id: workout.id,
+      workoutName: workout.workoutName,
+      description: workout.description,
+      // TODO: investigar cómo solucionar las listas inmutables de tra forma que no sea crear una nueva a partir de la original
+      exercises: List.from(workout.exercises),
+      createdAt: workout.createdAt,
+    );
     return workoutFormData;
   }
 

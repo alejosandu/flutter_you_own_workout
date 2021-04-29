@@ -30,7 +30,9 @@ class _WorkoutViewState extends State<WorkoutView> {
     );
     if (exercises != null) {
       exercises.forEach((a) {
-        if (!workout.exercises.any((b) => b == a)) workout.exercises.add(a);
+        if (!workout.exercises.any((b) => b.id == a.id)) {
+          workout.exercises.add(a);
+        }
       });
 
       setState(() {});
@@ -70,7 +72,9 @@ class _WorkoutViewState extends State<WorkoutView> {
       final workoutData =
           ModalRoute.of(context)?.settings.arguments as WorkoutModel?;
       if (workoutData != null) {
-        workout = WorkoutFormData.fromWorkoutModel(workoutData);
+        setState(() {
+          workout = WorkoutFormData.fromWorkoutModel(workoutData);
+        });
       }
     } catch (e) {
       CustomSnackBar(context, text: "Ocurrió un error al cargar los datos");
@@ -81,8 +85,13 @@ class _WorkoutViewState extends State<WorkoutView> {
 
   @override
   void initState() {
-    init();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    init();
+    super.didChangeDependencies();
   }
 
   @override
@@ -247,14 +256,17 @@ class _Card extends StatelessWidget implements ExpansionPanelRadio {
     this._header = InkWell(
       onTap: onTap,
       child: ListTile(
-        title: Row(
-          children: [
-            Text(exercise.exerciseName),
-            Text(" | "),
-            Icon(Icons.pending_actions),
-            Text(" "),
-            Text(exercise.duration.formatedDuration),
-          ],
+        title: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              Text(exercise.exerciseName),
+              Text(" | "),
+              Icon(Icons.pending_actions),
+              Text(" "),
+              Text(exercise.duration.formatedDuration),
+            ],
+          ),
         ),
       ),
     );
