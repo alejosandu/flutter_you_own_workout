@@ -78,5 +78,6 @@ class Database {
     );
 
     await workoutRepository.put(workout);
+    await exercisesRepository.putAll(exercises);
   }
 }

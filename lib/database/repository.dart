@@ -29,6 +29,12 @@ class Repository<T extends BoxModel> {
     return _box.put(model.id, model);
   }
 
+  Future putAll(Iterable<T> models) async {
+    for (T item in models) {
+      await _box.put(item.id, item);
+    }
+  }
+
   Future delete(T model) {
     return _box.delete(model.id);
   }
