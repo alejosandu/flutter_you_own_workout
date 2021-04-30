@@ -84,11 +84,6 @@ class _WorkoutViewState extends State<WorkoutView> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void didChangeDependencies() {
     init();
     super.didChangeDependencies();

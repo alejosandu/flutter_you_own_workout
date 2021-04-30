@@ -88,29 +88,51 @@ class _WorkoutCard extends StatelessWidget {
 
   _WorkoutCard(this.workout, {required this.update});
 
+  doEdit(BuildContext context) async {
+    await Navigator.pushNamed(
+      context,
+      WorkoutView.routeName,
+      arguments: workout,
+    );
+    update();
+  }
+
+  doWorkout(BuildContext context) {
+    Navigator.pushNamed(
+      context,
+      PlayWorkoutView.routeName,
+      arguments: workout,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () async {
-          await Navigator.pushNamed(
-            context,
-            WorkoutView.routeName,
-            arguments: workout,
-          );
-          update();
-        },
-        child: Column(
-          children: [
-            Text(workout.workoutName),
-            Text(workout.description ?? ''),
-            Text(workout.exercises.length.toString()),
-            Text(workout.exercisesDuration.formatedDuration),
-            Text(workout.breakTimeDuration.formatedDuration),
-            Text(workout.duration.formatedDuration),
-          ],
-        ),
+      child: Row(
+        children: [
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              doWorkout(context);
+            },
+            child: Column(
+              children: [
+                Text(workout.workoutName),
+                // Text(workout.description ?? ''),
+                Text(workout.exercises.length.toString()),
+                Text(workout.exercisesDuration.formatedDuration),
+                Text(workout.breakTimeDuration.formatedDuration),
+                Text(workout.duration.formatedDuration),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              doEdit(context);
+            },
+          ),
+        ],
       ),
     );
   }

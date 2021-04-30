@@ -1,6 +1,43 @@
 import 'dart:async';
 
+import '../models/workout.dart';
+
 class WorkoutPlayer {
+  late WorkoutModel _workout;
+  late Function _update;
+
+  WorkoutPlayer(this._workout);
+
+  addUpdater(Function updater) {
+    _update = updater;
+  }
+
+  play() {
+    try {
+      _update();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  pause() {
+    try {
+      _update();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  stop() {
+    try {
+      _update();
+    } catch (e) {
+      rethrow;
+    }
+  }
+}
+
+class WorkoutPlayerOld {
   int counter = 0;
   late Timer timer;
 
@@ -9,7 +46,7 @@ class WorkoutPlayer {
   int breakDuration;
   int series;
 
-  WorkoutPlayer({
+  WorkoutPlayerOld({
     required this.count,
     required this.intervalCount,
     required this.breakDuration,
