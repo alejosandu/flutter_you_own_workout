@@ -12,9 +12,12 @@ class WorkoutPlayer {
 
   double _counter = 0;
   double get counter => _counter;
-  late Timer timer;
+  late Timer _timer;
 
-  bool isStarted = false;
+  Stopwatch _stopwatch = Stopwatch();
+  Duration get elapsed => _stopwatch.elapsed;
+
+  bool _isStarted = false;
 
   WorkoutPlayer(this._workoutSource);
 
@@ -22,8 +25,9 @@ class WorkoutPlayer {
 
   play() {
     try {
-      if (isStarted) return;
+      if (_isStarted) return;
       _workout = _workoutSource.copy();
+      _stopwatch.start();
       _doWorkout();
       _update();
     } catch (e) {
@@ -33,7 +37,8 @@ class WorkoutPlayer {
 
   pause() {
     try {
-      timer.cancel();
+      _stopwatch.stop();
+      _timer.cancel();
       _update();
     } catch (e) {
       rethrow;
@@ -42,6 +47,7 @@ class WorkoutPlayer {
 
   stop() {
     try {
+      _stopwatch.reset();
       _update();
     } catch (e) {
       rethrow;
@@ -49,19 +55,27 @@ class WorkoutPlayer {
   }
 
   _doWorkout() async {
-    for (int i = 0; i < _workout.exercises.length; i++) {
-      _currentExercise = _workout.exercises.first;
-      _update();
-      await _doExercise(_currentExercise);
-      _workout.exercises.remove(_currentExercise);
-      if (_workout.exercises.length > 0) i--;
+    try {
+      for (int i = 0; i < _workout.exercises.length; i++) {
+        _currentExercise = _workout.exercises.first;
+        _update();
+        await _doExercise(_currentExercise);
+        _workout.exercises.remove(_currentExercise);
+        if (_workout.exercises.length > 0) i--;
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
   _doExercise(ExerciseModel exercise) async {
-    for (var i = 0; i < exercise.series; i++) {
-      await _doCount(exercise);
-      await _doBreak(exercise);
+    try {
+      for (var i = 0; i < exercise.series; i++) {
+        await _doCount(exercise);
+        await _doBreak(exercise);
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -69,10 +83,10 @@ class WorkoutPlayer {
     final completer = Completer();
     final time = exercise.intervalCount * 1000;
     final durationIntervalCount = Duration(milliseconds: time.toInt());
-    timer = Timer.periodic(durationIntervalCount, (_) {
+    _timer = Timer.periodic(durationIntervalCount, (_) {
       _counter++;
       if (_counter > exercise.count) {
-        timer.cancel();
+        _timer.cancel();
         _counter = 0;
         completer.complete();
       }
@@ -86,10 +100,10 @@ class WorkoutPlayer {
     final time = 1000;
     final duration = Duration(milliseconds: time);
     _counter = exercise.breakDuration;
-    timer = Timer.periodic(duration, (_) {
+    _timer = Timer.periodic(duration, (_) {
       _counter--;
       if (0 > _counter) {
-        timer.cancel();
+        _timer.cancel();
         _counter = 0;
         completer.complete();
       }

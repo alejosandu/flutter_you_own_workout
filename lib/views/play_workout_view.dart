@@ -4,6 +4,7 @@ import '../helpers/logger.dart';
 import '../models/models.dart';
 import '../widgets/widgets.dart';
 import '../helpers/workout_player.dart';
+import '../extensions/duration_extensions.dart';
 
 // page to play all exercises together as a full workout
 
@@ -44,7 +45,7 @@ class _PlayWorkoutViewState extends State<PlayWorkoutView> {
       isStopEnabled = true;
       player.pause();
     } catch (e) {
-      CustomSnackBar(context, text: "Ocurrió un error al detener");
+      CustomSnackBar(context, text: "Ocurrió un error al pausar");
       Logger.logError(e);
       debugPrint(e.toString());
     }
@@ -96,7 +97,10 @@ class _PlayWorkoutViewState extends State<PlayWorkoutView> {
           children: [
             Text(state),
             Text(player.currentExercise.exerciseName),
+            Text(player.currentExercise.duration.formatedDurationShort),
             Text(player.counter.toInt().toString()),
+            Text(player.elapsed.elapsedInMinutes.toInt().toString()),
+            Text(player.elapsed.elapsedInSeconds.toInt().toString()),
           ],
         ),
       ),
