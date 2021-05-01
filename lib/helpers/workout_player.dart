@@ -1,19 +1,30 @@
 import 'dart:async';
 
-import '../models/workout.dart';
+import '../models/models.dart';
 
 class WorkoutPlayer {
+  late WorkoutModel _workoutSource;
   late WorkoutModel _workout;
   late Function _update;
 
-  WorkoutPlayer(this._workout);
+  late ExerciseModel _currentExercise = ExerciseModel();
+  ExerciseModel get currentExercise => _currentExercise;
 
-  addUpdater(Function updater) {
-    _update = updater;
-  }
+  double _counter = 0;
+  double get counter => _counter;
+  late Timer timer;
+
+  bool isStarted = false;
+
+  WorkoutPlayer(this._workoutSource);
+
+  addUpdater(Function updater) => _update = updater;
 
   play() {
     try {
+      if (isStarted) return;
+      _workout = _workoutSource.copy();
+      _doWorkout();
       _update();
     } catch (e) {
       rethrow;
@@ -22,6 +33,7 @@ class WorkoutPlayer {
 
   pause() {
     try {
+      timer.cancel();
       _update();
     } catch (e) {
       rethrow;
@@ -35,58 +47,53 @@ class WorkoutPlayer {
       rethrow;
     }
   }
-}
 
-class WorkoutPlayerOld {
-  int counter = 0;
-  late Timer timer;
-
-  int count;
-  double intervalCount;
-  int breakDuration;
-  int series;
-
-  WorkoutPlayerOld({
-    required this.count,
-    required this.intervalCount,
-    required this.breakDuration,
-    required this.series,
-  });
-
-  void startCycling() async {
-    for (var i = 0; i < series; i++) {
-      await startCounter();
-      await doBreakTime();
+  _doWorkout() async {
+    for (int i = 0; i < _workout.exercises.length; i++) {
+      _currentExercise = _workout.exercises.first;
+      _update();
+      await _doExercise(_currentExercise);
+      _workout.exercises.remove(_currentExercise);
+      if (_workout.exercises.length > 0) i--;
     }
   }
 
-  Future startCounter() {
+  _doExercise(ExerciseModel exercise) async {
+    for (var i = 0; i < exercise.series; i++) {
+      await _doCount(exercise);
+      await _doBreak(exercise);
+    }
+  }
+
+  Future _doCount(ExerciseModel exercise) {
     final completer = Completer();
-    final time = intervalCount * 1000;
+    final time = exercise.intervalCount * 1000;
     final durationIntervalCount = Duration(milliseconds: time.toInt());
     timer = Timer.periodic(durationIntervalCount, (_) {
-      counter++;
-      if (counter > count) {
+      _counter++;
+      if (_counter > exercise.count) {
         timer.cancel();
-        counter = 0;
+        _counter = 0;
         completer.complete();
       }
+      _update();
     });
     return completer.future;
   }
 
-  Future doBreakTime() {
+  Future _doBreak(ExerciseModel exercise) {
     final completer = Completer();
     final time = 1000;
     final duration = Duration(milliseconds: time);
-    counter = breakDuration;
+    _counter = exercise.breakDuration;
     timer = Timer.periodic(duration, (_) {
-      counter--;
-      if (0 > counter) {
+      _counter--;
+      if (0 > _counter) {
         timer.cancel();
-        counter = 0;
+        _counter = 0;
         completer.complete();
       }
+      _update();
     });
     return completer.future;
   }

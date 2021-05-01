@@ -19,6 +19,7 @@ class _PlayWorkoutViewState extends State<PlayWorkoutView> {
   late WorkoutPlayer player;
   bool isPlaying = false;
   bool isStopped = false;
+  bool isStopEnabled = false;
   String state = 'stopped';
 
   play() async {
@@ -26,6 +27,7 @@ class _PlayWorkoutViewState extends State<PlayWorkoutView> {
       state = 'playing';
       isPlaying = true;
       isStopped = false;
+      isStopEnabled = false;
       player.play();
     } catch (e) {
       CustomSnackBar(context, text: "Ocurrió un error al reproducir");
@@ -39,6 +41,7 @@ class _PlayWorkoutViewState extends State<PlayWorkoutView> {
       state = 'paused';
       isPlaying = false;
       isStopped = false;
+      isStopEnabled = true;
       player.pause();
     } catch (e) {
       CustomSnackBar(context, text: "Ocurrió un error al detener");
@@ -52,6 +55,7 @@ class _PlayWorkoutViewState extends State<PlayWorkoutView> {
       if (isPlaying) return;
       state = 'stopped';
       isStopped = true;
+      isStopEnabled = false;
       player.stop();
     } catch (e) {
       CustomSnackBar(context, text: "Ocurrió un error al detener");
@@ -84,7 +88,6 @@ class _PlayWorkoutViewState extends State<PlayWorkoutView> {
 
     IconData fabIcon = Icons.play_arrow_rounded;
     if (isPlaying) fabIcon = Icons.pause_rounded;
-    if (isStopped) fabIcon = Icons.stop_rounded;
 
     return Scaffold(
       appBar: CustomAppBar(title: title),
@@ -92,15 +95,39 @@ class _PlayWorkoutViewState extends State<PlayWorkoutView> {
         child: Column(
           children: [
             Text(state),
+            Text(player.currentExercise.exerciseName),
+            Text(player.counter.toInt().toString()),
           ],
         ),
       ),
-      floatingActionButton: GestureDetector(
-        onTap: isPlaying ? pause : play,
-        onLongPress: stop,
-        child: FloatingActionButton(
-          child: Icon(fabIcon),
-          onPressed: null,
+      floatingActionButton: AnimatedContainer(
+        duration: Duration(milliseconds: 75),
+        height: 60,
+        width: isStopEnabled ? 135 : 56,
+        child: Stack(
+          children: [
+            Positioned(
+              left: 0,
+              bottom: 0,
+              child: FloatingActionButton(
+                heroTag: "stopButton",
+                child: Icon(Icons.stop_rounded),
+                onPressed: stop,
+                elevation: isStopEnabled ? 6 : 0,
+                backgroundColor: Colors.red,
+              ),
+            ),
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: FloatingActionButton(
+                heroTag: "playButton",
+                child: Icon(fabIcon),
+                onPressed: isPlaying ? pause : play,
+                elevation: 6,
+              ),
+            ),
+          ],
         ),
       ),
     );

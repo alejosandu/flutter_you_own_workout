@@ -53,6 +53,17 @@ class WorkoutModel implements BoxModel {
     return duration;
   }
 
+  /// create a full copy of the current object, this is intended to remove a reference to the object in memory
+  WorkoutModel copy() {
+    return WorkoutModel(
+      id: id,
+      workoutName: workoutName,
+      description: description,
+      exercises: List.from(exercises),
+      createdAt: createdAt,
+    );
+  }
+
   WorkoutModel({
     String? id,
     this.workoutName = '',
