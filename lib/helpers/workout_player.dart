@@ -63,6 +63,7 @@ class WorkoutPlayer {
         _workout.exercises.remove(_currentExercise);
         if (_workout.exercises.length > 0) i--;
       }
+      _stopwatch.stop();
     } catch (e) {
       rethrow;
     }
@@ -72,7 +73,7 @@ class WorkoutPlayer {
     try {
       for (var i = 0; i < exercise.series; i++) {
         await _doCount(exercise);
-        await _doBreak(exercise);
+        // await _doBreak(exercise);
       }
     } catch (e) {
       rethrow;
@@ -80,6 +81,25 @@ class WorkoutPlayer {
   }
 
   Future _doCount(ExerciseModel exercise) {
+    final completer = Completer();
+
+    final int aumenta = 100;
+    final double calc = double.parse(
+        (aumenta / (exercise.intervalCount * 1000)).toStringAsFixed(2));
+
+    _timer = Timer.periodic(Duration(milliseconds: aumenta), (_) {
+      _counter = double.parse((_counter + calc).toStringAsFixed(2));
+      _update();
+      if (_counter > exercise.count) {
+        _timer.cancel();
+        _counter = 0;
+        completer.complete();
+      }
+    });
+    return completer.future;
+  }
+
+  Future _doCount2(ExerciseModel exercise) {
     final completer = Completer();
     final time = exercise.intervalCount * 1000;
     final durationIntervalCount = Duration(milliseconds: time.toInt());

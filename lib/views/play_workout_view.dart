@@ -97,10 +97,19 @@ class _PlayWorkoutViewState extends State<PlayWorkoutView> {
           children: [
             Text(state),
             Text(player.currentExercise.exerciseName),
+            Text(workout.exercisesDuration.formatedDuration),
+            Text(player.currentExercise.exerciseDuration.formatedDurationShort),
             Text(player.currentExercise.duration.formatedDurationShort),
-            Text(player.counter.toInt().toString()),
-            Text(player.elapsed.elapsedInMinutes.toInt().toString()),
-            Text(player.elapsed.elapsedInSeconds.toInt().toString()),
+            Text(player.currentExercise.count.toString()),
+            Text(player.counter.toString()),
+            Text(player.elapsed.formatedDuration),
+            // Text(
+            //   player.elapsed.elapsedInMilliseconds
+            //       .toInt()
+            //       .toString()
+            //       .padRight(2, '0')
+            //       .substring(0, 2),
+            // ),
           ],
         ),
       ),

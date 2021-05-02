@@ -26,7 +26,7 @@ class ExerciseModel implements BoxModel {
   @HiveField(3)
   int count;
 
-  /// The time to wait to add 1 to the `count`
+  /// The time to wait to add 1 to the `count` in seconds
   @HiveField(4)
   double intervalCount;
 

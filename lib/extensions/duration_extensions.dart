@@ -9,6 +9,8 @@ extension DurationExtensions on Duration {
     return string.substring(2, 7);
   }
 
+  double get elapsedInMilliseconds => (this.inMilliseconds % 1000);
+
   double get elapsedInSeconds => (this.inSeconds % 60);
 
   double get elapsedInMinutes => (this.inMinutes % 60);
