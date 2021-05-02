@@ -57,7 +57,7 @@ class _PlayWorkoutViewState extends State<PlayWorkoutView> {
       state = 'stopped';
       isStopped = true;
       isStopEnabled = false;
-      player.stop();
+      player.reset();
     } catch (e) {
       CustomSnackBar(context, text: "Ocurrió un error al detener");
       Logger.logError(e);
@@ -101,7 +101,7 @@ class _PlayWorkoutViewState extends State<PlayWorkoutView> {
             Text(player.currentExercise.exerciseDuration.formatedDurationShort),
             Text(player.currentExercise.duration.formatedDurationShort),
             Text(player.currentExercise.count.toString()),
-            Text(player.counter.toString()),
+            Text(player.counter.toInt().toString()),
             Text(player.elapsed.formatedDuration),
             // Text(
             //   player.elapsed.elapsedInMilliseconds

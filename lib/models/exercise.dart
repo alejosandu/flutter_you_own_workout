@@ -54,7 +54,8 @@ class ExerciseModel implements BoxModel {
 
   /// duration calculation on milliseconds
   Duration get exerciseDuration {
-    final duration = ((count * intervalCount) * series) * 1000;
+    // add 1 to the count to include the last repetition and count it
+    final duration = (((count + 1) * intervalCount) * series) * 1000;
     return Duration(milliseconds: duration.toInt());
   }
 

@@ -45,8 +45,24 @@ class WorkoutPlayer {
     }
   }
 
+  /// `stop` and `reset` are pretty much the same, the only difference is that reset clear the timer;
   stop() {
     try {
+      _isStarted = false;
+      _counter = 0;
+      _timer.cancel();
+      _stopwatch.stop();
+      _update();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  reset() {
+    try {
+      _isStarted = false;
+      _counter = 0;
+      _timer.cancel();
       _stopwatch.reset();
       _update();
     } catch (e) {
@@ -63,7 +79,6 @@ class WorkoutPlayer {
         _workout.exercises.remove(_currentExercise);
         if (_workout.exercises.length > 0) i--;
       }
-      _stopwatch.stop();
     } catch (e) {
       rethrow;
     }
@@ -86,12 +101,16 @@ class WorkoutPlayer {
     final int aumenta = 100;
     final double calc = double.parse(
         (aumenta / (exercise.intervalCount * 1000)).toStringAsFixed(2));
-
+    // _stopwatch.start();
     _timer = Timer.periodic(Duration(milliseconds: aumenta), (_) {
+      final double previousValue = _counter;
       _counter = double.parse((_counter + calc).toStringAsFixed(2));
-      _update();
-      if (_counter > exercise.count) {
+      // only apply update when the value of _counter really changed
+      if (previousValue.truncate() + 1 == _counter.truncate()) _update();
+      // add 1 second to include the last repetition/count to the exercise
+      if (_counter >= exercise.count + 1) {
         _timer.cancel();
+        // _stopwatch.stop();
         _counter = 0;
         completer.complete();
       }
@@ -103,10 +122,12 @@ class WorkoutPlayer {
     final completer = Completer();
     final time = exercise.intervalCount * 1000;
     final durationIntervalCount = Duration(milliseconds: time.toInt());
+    _stopwatch.start();
     _timer = Timer.periodic(durationIntervalCount, (_) {
       _counter++;
       if (_counter > exercise.count) {
         _timer.cancel();
+        _stopwatch.stop();
         _counter = 0;
         completer.complete();
       }
