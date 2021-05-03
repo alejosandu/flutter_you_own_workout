@@ -30,7 +30,7 @@ class ExerciseModel implements BoxModel {
   @HiveField(4)
   double intervalCount;
 
-  /// time to  wait until the next `serie`
+  /// time to  wait until the next `serie` in seconds
   @HiveField(5)
   double breakDuration;
 
@@ -61,7 +61,8 @@ class ExerciseModel implements BoxModel {
 
   /// duration calculation on milliseconds
   Duration get breakTimeDuration {
-    final duration = (breakDuration * series) * 1000;
+    // add 1 to the count to include the last repetition and count it
+    final duration = ((breakDuration + 1) * series) * 1000;
     return Duration(milliseconds: duration.toInt());
   }
 

@@ -98,6 +98,8 @@ class _PlayWorkoutViewState extends State<PlayWorkoutView> {
             Text(state),
             Text(player.currentExercise.exerciseName),
             Text(workout.exercisesDuration.formatedDuration),
+            Text(workout.breakTimeDuration.formatedDuration),
+            Text(workout.duration.formatedDuration),
             Text(player.currentExercise.exerciseDuration.formatedDurationShort),
             Text(player.currentExercise.duration.formatedDurationShort),
             Text(player.currentExercise.count.toString()),
