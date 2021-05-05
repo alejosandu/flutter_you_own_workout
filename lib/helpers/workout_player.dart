@@ -2,6 +2,8 @@ import 'dart:async';
 
 import '../models/models.dart';
 
+import 'vibrator.dart';
+
 class WorkoutPlayer {
   late WorkoutModel _workoutSource;
   late WorkoutModel _workout;
@@ -19,6 +21,8 @@ class WorkoutPlayer {
 
   bool _isStarted = false;
 
+  Vibrator _vibrator = Vibrator();
+
   WorkoutPlayer(this._workoutSource);
 
   addUpdater(Function updater) => _update = updater;
@@ -26,6 +30,7 @@ class WorkoutPlayer {
   play() {
     try {
       if (_isStarted) return;
+      _vibrator.vibrationPLay();
       _workout = _workoutSource.copy();
       _stopwatch.start();
       _doWorkout();
@@ -37,6 +42,7 @@ class WorkoutPlayer {
 
   pause() {
     try {
+      _vibrator.vibrationPause();
       _stopwatch.stop();
       _timer.cancel();
       _update();
@@ -48,6 +54,7 @@ class WorkoutPlayer {
   /// `stop` and `reset` are pretty much the same, the only difference is that reset clear the timer;
   stop() {
     try {
+      _vibrator.vibrationStop();
       _isStarted = false;
       _counter = 0;
       _timer.cancel();
@@ -60,6 +67,7 @@ class WorkoutPlayer {
 
   reset() {
     try {
+      _vibrator.vibrationStop();
       _isStarted = false;
       _counter = 0;
       _timer.cancel();
@@ -79,6 +87,7 @@ class WorkoutPlayer {
         _workout.exercises.remove(_currentExercise);
         if (_workout.exercises.length > 0) i--;
       }
+      print('finish');
       stop();
     } catch (e) {
       rethrow;
@@ -88,7 +97,9 @@ class WorkoutPlayer {
   _doExercise(ExerciseModel exercise) async {
     try {
       for (var i = 0; i < exercise.series; i++) {
+        print('start exercise $exercise');
         await _doCount(exercise);
+        print('start break');
         await _doBreak(exercise);
       }
     } catch (e) {
