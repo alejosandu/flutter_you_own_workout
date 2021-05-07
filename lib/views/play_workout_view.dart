@@ -116,7 +116,7 @@ class _PlayWorkoutViewState extends State<PlayWorkoutView> {
         ),
       ),
       floatingActionButton: AnimatedContainer(
-        duration: Duration(milliseconds: 75),
+        duration: Duration(milliseconds: 150),
         height: 60,
         width: isStopEnabled ? 135 : 56,
         child: Stack(

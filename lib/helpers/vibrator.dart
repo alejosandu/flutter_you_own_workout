@@ -19,9 +19,9 @@ class _VibrationConfig {
 enum _VibrationTypes { PLAY, PAUSE, STOP }
 
 const Map _VibrationMap = {
-  _VibrationTypes.PLAY: _VibrationConfig(),
-  _VibrationTypes.PAUSE: _VibrationConfig(),
-  _VibrationTypes.STOP: _VibrationConfig(),
+  _VibrationTypes.PLAY: _VibrationConfig(pattern: [0, 50, 50, 50]),
+  _VibrationTypes.PAUSE: _VibrationConfig(duration: 250),
+  _VibrationTypes.STOP: _VibrationConfig(pattern: [0, 50, 50, 150, 100, 50]),
 };
 
 class Vibrator {
