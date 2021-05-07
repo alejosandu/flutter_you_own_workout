@@ -4,6 +4,8 @@ import '../models/models.dart';
 
 import 'vibrator.dart';
 
+enum Stage { stopped, next, workout, breakTime }
+
 class WorkoutPlayer {
   late WorkoutModel _workoutSource;
   late WorkoutModel _workout;
@@ -13,6 +15,7 @@ class WorkoutPlayer {
   ExerciseModel get currentExercise => _currentExercise;
 
   double _counter = 0;
+  int _seriesProgress = 0;
   double get counter => _counter;
   late Timer _timer;
 
@@ -20,6 +23,7 @@ class WorkoutPlayer {
   Duration get elapsed => _stopwatch.elapsed;
 
   bool _isStarted = false;
+  Stage _stage = Stage.stopped;
 
   Vibrator _vibrator = Vibrator();
 
@@ -29,11 +33,14 @@ class WorkoutPlayer {
 
   play() {
     try {
-      if (_isStarted) return;
+      if (!_isStarted) {
+        reset();
+        _isStarted = true;
+      }
       _vibrator.vibrationPLay();
       _workout = _workoutSource.copy();
-      _stopwatch.start();
       _doWorkout();
+      _stopwatch.start();
       _update();
     } catch (e) {
       rethrow;
@@ -54,6 +61,7 @@ class WorkoutPlayer {
   /// `stop` and `reset` are pretty much the same, the only difference is that reset clear the timer;
   stop() {
     try {
+      _stage = Stage.stopped;
       _vibrator.vibrationStop();
       _isStarted = false;
       _counter = 0;
@@ -67,12 +75,8 @@ class WorkoutPlayer {
 
   reset() {
     try {
-      _vibrator.vibrationStop();
-      _isStarted = false;
-      _counter = 0;
-      _timer.cancel();
+      stop();
       _stopwatch.reset();
-      _update();
     } catch (e) {
       rethrow;
     }
@@ -82,7 +86,6 @@ class WorkoutPlayer {
     try {
       for (int i = 0; i < _workout.exercises.length; i++) {
         _currentExercise = _workout.exercises.first;
-        _update();
         await _doExercise(_currentExercise);
         _workout.exercises.remove(_currentExercise);
         if (_workout.exercises.length > 0) i--;
@@ -96,12 +99,14 @@ class WorkoutPlayer {
 
   _doExercise(ExerciseModel exercise) async {
     try {
-      for (var i = 0; i < exercise.series; i++) {
-        print('start exercise $exercise');
-        await _doCount(exercise);
-        print('start break');
+      for (var i = _seriesProgress; i < exercise.series; i++) {
+        _seriesProgress = i;
+        if (_stage != Stage.breakTime) await _doCount(exercise);
         await _doBreak(exercise);
+        _stage = Stage.next;
       }
+      // reset series progress
+      _seriesProgress = 0;
     } catch (e) {
       rethrow;
     }
@@ -117,7 +122,6 @@ class WorkoutPlayer {
       (incrementTime / (intervalTimeToCount * 1000)).toStringAsFixed(2),
     );
 
-    _counter = 0;
     _stopwatch.start();
     final completer = Completer();
 
@@ -140,11 +144,15 @@ class WorkoutPlayer {
     return completer.future;
   }
 
-  Future _doCount(ExerciseModel exercise) {
+  Future? _doCount(ExerciseModel exercise) {
+    print('start exercise $exercise');
+    _stage = Stage.workout;
     return _startCount(exercise.count, exercise.intervalCount, 100);
   }
 
-  Future _doBreak(ExerciseModel exercise) {
+  Future? _doBreak(ExerciseModel exercise) {
+    print('start break');
+    _stage = Stage.breakTime;
     return _startCount(exercise.breakDuration, 1, 100);
   }
 }

@@ -32,6 +32,7 @@ class Vibrator {
   }
 
   _init() async {
+    // TODO: add check of battery on save mode to disable the feature too
     _canVibrate = await Vibration.hasVibrator();
   }
 
