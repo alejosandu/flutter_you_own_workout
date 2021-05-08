@@ -11,7 +11,7 @@ class WorkoutPlayer {
   late WorkoutModel _workout;
   late Function _update;
 
-  late ExerciseModel _currentExercise = ExerciseModel();
+  ExerciseModel _currentExercise = ExerciseModel();
   ExerciseModel get currentExercise => _currentExercise;
 
   double _counter = 0;
