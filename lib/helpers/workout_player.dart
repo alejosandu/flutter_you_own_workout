@@ -45,9 +45,9 @@ class WorkoutPlayer {
         resetState();
         _stopwatch.reset();
         _isStarted = true;
+        _workout = _workoutSource.copy();
       }
       _vibrator.vibrationPLay();
-      _workout = _workoutSource.copy();
       _doWorkout();
       _stopwatch.start();
       _update();
@@ -81,6 +81,7 @@ class WorkoutPlayer {
   reset() {
     try {
       stop();
+      _workout = _workoutSource.copy();
       _stopwatch.reset();
     } catch (e) {
       rethrow;
