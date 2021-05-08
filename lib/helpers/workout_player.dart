@@ -17,7 +17,7 @@ class WorkoutPlayer {
   double _counter = 0;
   int _seriesProgress = 0;
   double get counter => _counter;
-  late Timer _timer;
+  Timer _timer = Timer(Duration.zero, () {});
 
   Stopwatch _stopwatch = Stopwatch();
   Duration get elapsed => _stopwatch.elapsed;
@@ -31,10 +31,19 @@ class WorkoutPlayer {
 
   addUpdater(Function updater) => _update = updater;
 
+  resetState() {
+    _stage = Stage.stopped;
+    _isStarted = false;
+    _counter = 0;
+    _timer.cancel();
+    _stopwatch.stop();
+  }
+
   play() {
     try {
       if (!_isStarted) {
-        reset();
+        resetState();
+        _stopwatch.reset();
         _isStarted = true;
       }
       _vibrator.vibrationPLay();
@@ -61,12 +70,8 @@ class WorkoutPlayer {
   /// `stop` and `reset` are pretty much the same, the only difference is that reset clear the timer;
   stop() {
     try {
-      _stage = Stage.stopped;
+      resetState();
       _vibrator.vibrationStop();
-      _isStarted = false;
-      _counter = 0;
-      _timer.cancel();
-      _stopwatch.stop();
       _update();
     } catch (e) {
       rethrow;
