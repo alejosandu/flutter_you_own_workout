@@ -25,7 +25,7 @@ class WorkoutModel implements BoxModel {
   @HiveField(3)
   List<ExerciseModel> exercises = [];
 
-  // date when the object was created
+  /// date when the object was created
   @HiveField(4)
   late DateTime _createdAt;
   DateTime get createdAt => _createdAt;
