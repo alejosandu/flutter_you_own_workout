@@ -118,7 +118,7 @@ class WorkoutPlayer {
     }
   }
 
-  Future _startCount(
+  Future _startIncreaseByTime(
     num limit,
     num intervalTimeToCount,
     num incrementTime,
@@ -148,6 +148,14 @@ class WorkoutPlayer {
     });
 
     return completer.future;
+  }
+
+  Future _startCount(
+    num limit,
+    num intervalTimeToCount,
+    num incrementTime,
+  ) {
+    return _startIncreaseByTime(limit, intervalTimeToCount, incrementTime);
   }
 
   Future? _doCount(ExerciseModel exercise) {
