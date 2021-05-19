@@ -42,10 +42,14 @@ class ExerciseModel implements BoxModel {
   @HiveField(7)
   double? addedWeight;
 
-  // date when the object was created
+  /// date when the object was created
   @HiveField(8)
   late DateTime _createdAt;
   DateTime get createdAt => _createdAt;
+
+  /// method used to play the exercise
+  @HiveField(9)
+  ExerciseMethod exerciseMethod;
 
   /// duration calculation on milliseconds
   Duration get duration {
@@ -74,11 +78,12 @@ class ExerciseModel implements BoxModel {
     this.exerciseName = '',
     this.description,
     this.count = 0,
-    this.intervalCount = 0,
+    this.intervalCount = 1,
     this.breakDuration = 0,
     this.series = 0,
     this.addedWeight = 0,
     DateTime? createdAt,
+    this.exerciseMethod = ExerciseMethod.increaseByTime,
   }) {
     final uuid = Uuid();
     _id = id ?? uuid.v4();

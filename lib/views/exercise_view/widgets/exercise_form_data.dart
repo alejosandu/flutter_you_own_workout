@@ -18,7 +18,7 @@ class ExerciseFormData extends ExerciseModel {
           id: id,
           exerciseName: exerciseName ?? '',
           count: count ?? 0,
-          intervalCount: intervalCount ?? 0,
+          intervalCount: intervalCount ?? 1,
           breakDuration: breakDuration ?? 0,
           series: series ?? 0,
           addedWeight: addedWeight,
