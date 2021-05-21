@@ -36,6 +36,7 @@ dependencies:
   flutter_speed_dial: 3.0.5
   numberpicker: 2.1.1
   vibration: 1.7.4-nullsafety.0
+  wakelock: 0.5.2
 
 dev_dependencies:
   flutter_test:

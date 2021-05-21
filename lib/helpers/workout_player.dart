@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:wakelock/wakelock.dart';
 
 import '../models/models.dart';
 
@@ -47,6 +48,7 @@ class WorkoutPlayer {
         _isStarted = true;
         _workout = _workoutSource.copy();
       }
+      Wakelock.enable();
       _vibrator.vibrationPLay();
       _doWorkout();
       _stopwatch.start();
@@ -70,6 +72,7 @@ class WorkoutPlayer {
   /// `stop` and `reset` are pretty much the same, the only difference is that reset clear the timer;
   stop() {
     try {
+      Wakelock.disable();
       resetState();
       _vibrator.vibrationStop();
       _update();
