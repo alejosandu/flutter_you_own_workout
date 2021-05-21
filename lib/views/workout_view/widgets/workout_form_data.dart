@@ -2,19 +2,25 @@ import '../../../helpers/validator.dart';
 import '../../../models/models.dart';
 
 class WorkoutFormData extends WorkoutModel {
+  // TODO: change this class to not extend only compose
+  late WorkoutModel _workout;
+
   WorkoutFormData({
     String? id,
     String workoutName = '',
     String? description,
     List<ExerciseModel>? exercises,
     DateTime? createdAt,
+    WorkoutModel? workout,
   }) : super(
           id: id,
           workoutName: workoutName,
           description: description,
           exercises: exercises,
           createdAt: createdAt,
-        );
+        ) {
+    _workout = workout ?? WorkoutModel();
+  }
 
   setWorkoutName(String value) => workoutName = value;
   String? get workoutNameIsValid {

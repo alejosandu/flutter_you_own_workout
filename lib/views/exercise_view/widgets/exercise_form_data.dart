@@ -5,6 +5,9 @@ import '../../../helpers/validator.dart';
 class ExerciseFormData extends ExerciseModel {
   bool aditionalOptionsIsExpanded = false;
 
+  // TODO: change this class to not extend only compose
+  late ExerciseModel _exercise;
+
   ExerciseFormData({
     String? id,
     String? exerciseName,
@@ -14,6 +17,7 @@ class ExerciseFormData extends ExerciseModel {
     int? series,
     double? addedWeight,
     DateTime? createdAt,
+    ExerciseModel? exercise,
   }) : super(
           id: id,
           exerciseName: exerciseName ?? '',
@@ -23,7 +27,9 @@ class ExerciseFormData extends ExerciseModel {
           series: series ?? 0,
           addedWeight: addedWeight,
           createdAt: createdAt,
-        );
+        ) {
+    _exercise = exercise ?? ExerciseModel();
+  }
 
   static ExerciseFormData fromExerciseModel(ExerciseModel exercise) {
     final exerciseFormData = ExerciseFormData(
